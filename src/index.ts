@@ -1,32 +1,40 @@
-import {Client, Intents, Interaction, MessageReaction, PartialMessageReaction} from "discord.js";
+import {Collection, Intents, Interaction, MessageReaction, PartialMessageReaction} from "discord.js";
 import {token} from "./secrets/config.json";
+import * as fs from "fs";
 
-const client: Client = new Client({
-    intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS]
-});
+const { Client } = require('discord.js');
+const client = new Client({intents: [Intents.FLAGS.GUILDS]});
+
+const commandFiles = fs.readdirSync('./src/commands');
+client.commands = new Collection();
+for (const file of commandFiles) {
+    const command = require(`./commands/${file}`);
+    client.commands.set(command.data.name, command);
+}
 
 client.on('ready', () => console.log(`Logged in as ${client.user!.tag}!`));
 
 client.on('interactionCreate', async (interaction: Interaction) => {
-    if (!interaction.isCommand()) return;
-    switch (interaction.commandName) {
-        case 'initialize':
-            await interaction.reply('Initialize feature coming soon!');
-            break;
-        case 'ping':
-            await interaction.reply('Pong!')
-            break;
-        case 'terminate':
-            await interaction.reply({content: "Terminate feature coming soon!", ephemeral: true, fetchReply: false});
-            await interaction.user.send("Terminate feature coming soon!");
-            break;
-        default:
-            break;
+    if (interaction.isCommand()) {
+        const command = client.commands.get(interaction.commandName);
+        if (!command) return;
+        try {
+            await command.execute(interaction);
+        } catch (error) {
+            console.error(error);
+            await interaction.reply({
+                content: 'There was an error while executing this command!',
+                ephemeral: true
+            });
+        }
+    } else if (interaction.isButton()) {
+
+    } else {
+        return;
     }
 });
 
 client.on('messageReactionAdd', async (reaction: (MessageReaction | PartialMessageReaction)) => {
-    //TODO: listen for reactions or use message buttons and drop downs? Hmm...
     await reaction.message.reactions.removeAll();
 });
 
