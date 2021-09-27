@@ -14,7 +14,38 @@ const handleJoinCommand = async (interaction: CommandInteraction) => {
         });
     } else {
         updateQueuedUsers(interaction.user, MultiplesAction.ADD);
-        const embedProps: MessageEmbedOptions = {
+        const replaceMeWithMapTracking: boolean = false;
+        const replaceMeWithMapPool: string[] = [
+            "Farmhouse West",
+            "Hideout West",
+            "Ministry",
+            "Outskirts West",
+            "Powerplant West",
+            "Precinct East",
+            "Refinery",
+            "Summit East",
+            "Tell East",
+            "Tell West",
+            "Tideway West"
+        ]
+        const mapPoolEmbedProps: MessageEmbedOptions = {
+            title: "Map Pool",
+            fields: [
+                {
+                    name: "Recently Played Maps",
+                    value: replaceMeWithMapTracking ? "3" : "No maps have been played yet.",
+                    inline: false
+                },
+                {
+                    name: "Available Maps",
+                    value: replaceMeWithMapPool
+                        .toString()
+                        .replace(/\s*,\s*|\s+,/g, "\n"),
+                    inline: false
+                }
+            ]
+        };
+        const queueEmbedProps: MessageEmbedOptions = {
             // author: client.user.username,
             title: "Pickup Game Queue",
             // thumbnail:,
@@ -42,7 +73,7 @@ const handleJoinCommand = async (interaction: CommandInteraction) => {
             }
         };
         await pugQueueBotMessage.edit({
-            embeds: [BotMessageEmbed(embedProps)]
+            embeds: [BotMessageEmbed(mapPoolEmbedProps), BotMessageEmbed(queueEmbedProps)]
         });
         await interaction.reply({
             content: "You have been added to the PUG Queue!",

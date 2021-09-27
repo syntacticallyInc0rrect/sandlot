@@ -1,4 +1,4 @@
-import {memberNicknameMention, SlashCommandBuilder} from '@discordjs/builders';
+import {bold, memberNicknameMention, SlashCommandBuilder} from '@discordjs/builders';
 import {CommandInteraction, MessageEmbedOptions, Role} from "discord.js";
 import {
     initiated,
@@ -41,16 +41,42 @@ const handleInitiateCommand = async (interaction: CommandInteraction) => {
                     }]
                 }).then(async bc => {
                     updatePugQueueBotTextChannel(bc);
-                    const embedProps: MessageEmbedOptions = {
-                        // author: client.user.username,
-                        title: "Pickup Game Queue",
-                        // thumbnail:,
+                    const replaceMeWithMapTracking: boolean = false;
+                    const replaceMeWithMapPool: string[] = [
+                        "Farmhouse West",
+                        "Hideout West",
+                        "Ministry",
+                        "Outskirts West",
+                        "Powerplant West",
+                        "Precinct East",
+                        "Refinery",
+                        "Summit East",
+                        "Tell East",
+                        "Tell West",
+                        "Tideway West"
+                    ]
+                    const mapPoolEmbedProps: MessageEmbedOptions = {
+                        title: "Map Pool",
                         fields: [
                             {
-                                name: "Map Pool",
-                                value: "Tell West Only!",
-                                inline: true
+                                name: "Recently Played Maps",
+                                value: replaceMeWithMapTracking ? "3" : "No maps have been played yet.",
+                                inline: false
                             },
+                            {
+                                name: "Available Maps",
+                                value: replaceMeWithMapPool
+                                    .toString()
+                                    .replace(/\s*,\s*|\s+,/g, "\n"),
+                                inline: false
+                            }
+                        ]
+                    };
+                    const queueEmbedProps: MessageEmbedOptions = {
+                        // author: client.user.username,
+                        title: "Queue",
+                        // thumbnail:,
+                        fields: [
                             {
                                 name: `In Queue - ${queuedUsers.length}/10`,
                                 value: queuedUsers.length > 0 ?
@@ -67,8 +93,8 @@ const handleInitiateCommand = async (interaction: CommandInteraction) => {
                         {customId: 'afkImmune', label: 'AFK Immune', style: 'PRIMARY', emoji: '⏳'}
                     ];
                     await pugQueueBotTextChannel.send({
-                        content: "Pickup Games Queue",
-                        embeds: [BotMessageEmbed(embedProps)],
+                        content: bold("/----- Pickup Games -----/"),
+                        embeds: [BotMessageEmbed(mapPoolEmbedProps), BotMessageEmbed(queueEmbedProps)],
                         components: [ButtonRow(buttonRowProps)]
                     }).then(m => updatePugQueueBotMessage(m));
                 });
