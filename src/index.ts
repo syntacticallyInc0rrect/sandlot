@@ -28,7 +28,17 @@ client.on('interactionCreate', async (interaction: Interaction) => {
             });
         }
     } else if (interaction.isButton()) {
-        await console.log(`${interaction.user.username} clicked a button.`)
+        switch (interaction.customId) {
+            case 'joinQueue':
+                await client.commands.get('join').execute(interaction);
+                break;
+            case 'leaveQueue':
+                break;
+            case 'afkImmune':
+                break;
+            default:
+                return;
+        }
     } else {
         return;
     }
