@@ -51,7 +51,7 @@ const handleJoinCommand = async (interaction: CommandInteraction) => {
             // thumbnail:,
             fields: [
                 {
-                    name: `In Queue - ${queuedUsers.length}/10`,
+                    name: `${queuedUsers.length}/10`,
                     value: queuedUsers.length > 0 ?
                         queuedUsers
                             .map(qu => memberNicknameMention(qu.id))
