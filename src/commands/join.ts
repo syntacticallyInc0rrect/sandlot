@@ -28,9 +28,9 @@ const handleJoinCommand = async (interaction: CommandInteraction) => {
                     name: `In Queue - ${queuedUsers.length}/10`,
                     value: queuedUsers.length > 0 ?
                         queuedUsers
-                            .map(qu => memberNicknameMention(qu.id)+"\n")
+                            .map(qu => memberNicknameMention(qu.id))
                             .toString()
-                            .replace(",", "") :
+                            .replace(/\s*,\s*|\s+,/g, "\n") :
                         "Waiting on first player.",
                     inline: false
                 }
