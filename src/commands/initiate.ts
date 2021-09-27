@@ -22,7 +22,7 @@ const handleIntiiateCommand = async (interaction: CommandInteraction) => {
     } else {
         const guild = interaction.guild;
         if (!guild) throw Error("You must run this command inside of a Discord Guild.");
-        await interaction.guild.channels.create("PICKUP GAMES ", {type: "GUILD_CATEGORY"})
+        await guild.channels.create("PICKUP GAMES ", {type: "GUILD_CATEGORY"})
             .then(async category => {
                 updatePugQueueCategory(category);
                 const everyoneRole: Role | undefined = guild.roles.cache.find(r => r.name === '@everyone');
