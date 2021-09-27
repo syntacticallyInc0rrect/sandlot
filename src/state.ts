@@ -1,7 +1,7 @@
 import {CategoryChannel, TextChannel, VoiceChannel} from "discord.js";
 
-export let initialized: boolean;
-export const updateInitialized = () => initialized = !initialized;
+export let initiated: boolean;
+export const updateInitiate = () => initiated = !initiated;
 
 export let pugQueueCategory: CategoryChannel;
 export const updatePugQueueCategory = (pqc: CategoryChannel) => pugQueueCategory = pqc;

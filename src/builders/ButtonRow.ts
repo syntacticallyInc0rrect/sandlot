@@ -1,10 +1,4 @@
-import {
-    EmojiIdentifierResolvable,
-    MessageActionRow,
-    MessageActionRowComponentResolvable,
-    MessageButton,
-    MessageButtonStyleResolvable
-} from "discord.js";
+import {EmojiIdentifierResolvable, MessageActionRow, MessageButton, MessageButtonStyleResolvable} from "discord.js";
 
 export type ButtonRowProps = {
     customId: string,

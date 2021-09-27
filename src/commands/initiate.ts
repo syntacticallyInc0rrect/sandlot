@@ -1,20 +1,21 @@
 import {SlashCommandBuilder} from '@discordjs/builders';
-import {CommandInteraction, MessageActionRow, MessageButton, Role} from "discord.js";
+import {CommandInteraction, Role} from "discord.js";
 import {
-    initialized, pugQueueBotTextChannel,
-    updateInitialized,
+    initiated,
+    pugQueueBotTextChannel,
+    updateInitiate,
     updatePugQueueBotTextChannel,
     updatePugQueueCategory,
     updatePugQueueTextChannel,
     updatePugQueueVoiceChannel
 } from "../state";
-import {ButtonRow, ButtonRowProps} from "../builders/buttonRow";
+import {ButtonRow, ButtonRowProps} from "../builders/ButtonRow";
 
-const handleInitializeCommand = async (interaction: CommandInteraction) => {
-    if (initialized) {
+const handleIntiiateCommand = async (interaction: CommandInteraction) => {
+    if (initiated) {
         await interaction.reply({
-            content: "Your bot is already initialized. If you would like to re-initialize it, " +
-                "run the /terminate command and then try the /initialize command again.",
+            content: "Your bot is already running. If you would like to restart it, " +
+                "run the /terminate command and then try the /initiate command again.",
             ephemeral: true,
             fetchReply: false
         });
@@ -37,9 +38,9 @@ const handleInitializeCommand = async (interaction: CommandInteraction) => {
                 }).then(async bc => {
                     updatePugQueueBotTextChannel(bc);
                     const buttonRowProps: ButtonRowProps[] = [
-                        { customId: 'joinQueue', label: 'Join', style: 'SUCCESS', emoji: '➕' },
-                        { customId: 'leaveQueue', label: 'Leave', style: 'DANGER', emoji: '➖' },
-                        { customId: 'afkImmune', label: 'AFK Immune', style: 'PRIMARY', emoji: '⏳' }
+                        {customId: 'joinQueue', label: 'Join', style: 'SUCCESS', emoji: '➕'},
+                        {customId: 'leaveQueue', label: 'Leave', style: 'DANGER', emoji: '➖'},
+                        {customId: 'afkImmune', label: 'AFK Immune', style: 'PRIMARY', emoji: '⏳'}
                     ];
                     await pugQueueBotTextChannel.send({
                         content: "Pickup Game Queue",
@@ -56,20 +57,20 @@ const handleInitializeCommand = async (interaction: CommandInteraction) => {
                 }).then(vc => updatePugQueueVoiceChannel(vc));
             }).then(async () => {
                 await interaction.reply({
-                    content: "PUG Queue Bot has been Initialized!",
+                    content: "Your PUG Bot has been initiated!",
                     ephemeral: true,
                     fetchReply: false
                 });
-                updateInitialized();
+                updateInitiate();
             });
     }
 };
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('initialize')
-        .setDescription('Initializes the PUG Bot'),
+        .setName('initiate')
+        .setDescription('Initiates the PUG Bot'),
     async execute(interaction: CommandInteraction) {
-        await handleInitializeCommand(interaction);
+        await handleIntiiateCommand(interaction);
     }
 };

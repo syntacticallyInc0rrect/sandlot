@@ -2,7 +2,7 @@ import {Collection, Intents, Interaction, MessageReaction, PartialMessageReactio
 import {token} from "./secrets/config.json";
 import * as fs from "fs";
 
-const { Client } = require('discord.js');
+const {Client} = require('discord.js');
 const client = new Client({intents: [Intents.FLAGS.GUILDS]});
 
 const commandFiles = fs.readdirSync('./src/commands');
