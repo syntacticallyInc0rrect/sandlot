@@ -47,14 +47,9 @@ const handleJoinCommand = async (interaction: CommandInteraction) => {
         };
         const queueEmbedProps: MessageEmbedOptions = {
             // author: client.user.username,
-            title: "Pickup Game Queue",
+            title: "Queue",
             // thumbnail:,
             fields: [
-                {
-                    name: "Map Pool",
-                    value: "Tell West Only!",
-                    inline: true
-                },
                 {
                     name: `In Queue - ${queuedUsers.length}/10`,
                     value: queuedUsers.length > 0 ?
@@ -66,11 +61,7 @@ const handleJoinCommand = async (interaction: CommandInteraction) => {
                     inline: false
                 }
             ],
-            footer: {
-                text: queuedUsers.length > 0 ?
-                    "Good luck, have fun!" :
-                    "Be the first to join the queue! Start a revolution!"
-            }
+            footer: {text: "Good luck, have fun!"}
         };
         await pugQueueBotMessage.edit({
             embeds: [BotMessageEmbed(mapPoolEmbedProps), BotMessageEmbed(queueEmbedProps)]
