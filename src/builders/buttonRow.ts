@@ -1,23 +1,30 @@
-import {MessageActionRow, MessageButton} from "discord.js";
+import {
+    EmojiIdentifierResolvable,
+    MessageActionRow,
+    MessageActionRowComponentResolvable,
+    MessageButton,
+    MessageButtonStyleResolvable
+} from "discord.js";
 
-export const ButtonRow = async (): Promise<MessageActionRow> => {
-    const row: MessageActionRow = new MessageActionRow()
-        .addComponents(
-            new MessageButton()
-                .setCustomId('joinQueue')
-                .setLabel('Join')
-                .setStyle('SUCCESS')
-                .setEmoji('➕'),
-            new MessageButton()
-                .setCustomId('leaveQueue')
-                .setLabel('Leave')
-                .setStyle('DANGER')
-                .setEmoji('➖'),
-            new MessageButton()
-                .setCustomId('afkImmunity')
-                .setLabel('AFK Immune')
-                .setStyle('PRIMARY')
-                .setEmoji('⏳')
-        );
-    return row;
+export type ButtonRowProps = {
+    customId: string,
+    label: string,
+    style: MessageButtonStyleResolvable,
+    emoji?: EmojiIdentifierResolvable
+    url?: string,
+    disabled?: boolean
+}
+
+export const ButtonRow = (props: ButtonRowProps[]): MessageActionRow => {
+    return new MessageActionRow()
+        .addComponents(props
+            .map(prop => new MessageButton()
+                .setCustomId(prop.customId)
+                .setLabel(prop.label)
+                .setStyle(prop.style)
+                .setEmoji(prop.emoji ? prop.emoji : "")
+                .setURL(prop.url ? prop.url : "")
+                .setDisabled(prop.disabled ? prop.disabled : false)
+            )
+        )
 };

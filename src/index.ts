@@ -28,7 +28,7 @@ client.on('interactionCreate', async (interaction: Interaction) => {
             });
         }
     } else if (interaction.isButton()) {
-
+        await console.log(`${interaction.user.username} clicked a button.`)
     } else {
         return;
     }
@@ -38,6 +38,4 @@ client.on('messageReactionAdd', async (reaction: (MessageReaction | PartialMessa
     await reaction.message.reactions.removeAll();
 });
 
-client.login(token)
-    .then()
-    .catch(() => console.log("Error: Invalid Token"));
+client.login(token).catch(() => console.log("Error: Invalid Token"));

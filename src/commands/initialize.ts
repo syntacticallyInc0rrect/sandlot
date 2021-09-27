@@ -8,7 +8,7 @@ import {
     updatePugQueueTextChannel,
     updatePugQueueVoiceChannel
 } from "../state";
-import {ButtonRow} from "../builders/buttonRow";
+import {ButtonRow, ButtonRowProps} from "../builders/buttonRow";
 
 const handleInitializeCommand = async (interaction: CommandInteraction) => {
     if (initialized) {
@@ -36,10 +36,14 @@ const handleInitializeCommand = async (interaction: CommandInteraction) => {
                     }]
                 }).then(async bc => {
                     updatePugQueueBotTextChannel(bc);
-                    const buttonRow = await ButtonRow();
+                    const buttonRowProps: ButtonRowProps[] = [
+                        { customId: 'joinQueue', label: 'Join', style: 'SUCCESS', emoji: '➕' },
+                        { customId: 'leaveQueue', label: 'Leave', style: 'DANGER', emoji: '➖' },
+                        { customId: 'afkImmune', label: 'AFK Immune', style: 'PRIMARY', emoji: '⏳' }
+                    ];
                     await pugQueueBotTextChannel.send({
                         content: "Pickup Game Queue",
-                        components: [buttonRow]
+                        components: [ButtonRow(buttonRowProps)]
                     });
                 });
                 await guild.channels.create("text-chat", {
@@ -52,7 +56,7 @@ const handleInitializeCommand = async (interaction: CommandInteraction) => {
                 }).then(vc => updatePugQueueVoiceChannel(vc));
             }).then(async () => {
                 await interaction.reply({
-                    content: "Pug Queue Bot Initiated!",
+                    content: "PUG Queue Bot has been Initialized!",
                     ephemeral: true,
                     fetchReply: false
                 });
