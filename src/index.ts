@@ -1,6 +1,7 @@
 import {Collection, Intents, Interaction, MessageReaction, PartialMessageReaction} from "discord.js";
 import {token} from "./secrets/config.json";
 import * as fs from "fs";
+import {ButtonCustomIdOption, clientUser, CommandNameOption, updateClientUser} from "./state";
 
 const {Client} = require('discord.js');
 const client = new Client({intents: [Intents.FLAGS.GUILDS]});
@@ -12,7 +13,10 @@ for (const file of commandFiles) {
     client.commands.set(command.data.name, command);
 }
 
-client.on('ready', () => console.log(`Logged in as ${client.user!.tag}!`));
+client.on('ready', () => {
+    updateClientUser(client.user);
+    console.log(`Logged in as ${clientUser.tag}!`);
+});
 
 client.on('interactionCreate', async (interaction: Interaction) => {
     if (interaction.isCommand()) {
@@ -29,12 +33,13 @@ client.on('interactionCreate', async (interaction: Interaction) => {
         }
     } else if (interaction.isButton()) {
         switch (interaction.customId) {
-            case 'joinQueue':
-                await client.commands.get('join').execute(interaction);
+            case ButtonCustomIdOption.join.valueOf():
+                await client.commands.get(CommandNameOption.join.valueOf()).execute(interaction);
                 break;
-            case 'leaveQueue':
+            case ButtonCustomIdOption.leave.valueOf():
+                await client.commands.get(CommandNameOption.leave.valueOf()).execute(interaction);
                 break;
-            case 'afkImmune':
+            case ButtonCustomIdOption.afkImmune.valueOf():
                 break;
             default:
                 return;

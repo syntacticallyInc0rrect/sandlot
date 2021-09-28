@@ -11,7 +11,7 @@ import {
 import {MapPoolEmbed} from "../embeds/MapPoolEmbed";
 import {QueueEmbed} from "../embeds/QueueEmbed";
 
-const handleJoinCommand = async (interaction: CommandInteraction) => {
+const handleLeaveCommand = async (interaction: CommandInteraction) => {
     if (!initiated) {
         await interaction.reply({
             content: "There is no initiated PUG Bot to be added to. " +
@@ -20,7 +20,7 @@ const handleJoinCommand = async (interaction: CommandInteraction) => {
             fetchReply: false
         });
     } else {
-        const replyMessage: string = updateQueuedUsers(interaction.user, MultiplesAction.ADD);
+        const replyMessage: string = updateQueuedUsers(interaction.user, MultiplesAction.REMOVE);
         await pugQueueBotMessage.edit({
             embeds: [MapPoolEmbed(), QueueEmbed()]
         });
@@ -34,9 +34,9 @@ const handleJoinCommand = async (interaction: CommandInteraction) => {
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName(CommandNameOption.join.valueOf())
-        .setDescription(CommandDescOption.join.valueOf()),
+        .setName(CommandNameOption.leave.valueOf())
+        .setDescription(CommandDescOption.leave.valueOf()),
     async execute(interaction: CommandInteraction) {
-        await handleJoinCommand(interaction);
+        await handleLeaveCommand(interaction);
     },
 };

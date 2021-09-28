@@ -1,9 +1,10 @@
-import {bold, memberNicknameMention, SlashCommandBuilder} from '@discordjs/builders';
-import {CommandInteraction, MessageEmbedOptions, Role} from "discord.js";
+import {bold, SlashCommandBuilder} from '@discordjs/builders';
+import {CommandInteraction, Role} from "discord.js";
 import {
+    CommandDescOption,
+    CommandNameOption,
     initiated,
     pugQueueBotTextChannel,
-    queuedUsers,
     updateInitiate,
     updatePugQueueBotMessage,
     updatePugQueueBotTextChannel,
@@ -11,9 +12,9 @@ import {
     updatePugQueueTextChannel,
     updatePugQueueVoiceChannel
 } from "../state";
-import {ButtonRow, ButtonRowProps} from "../builders/ButtonRow";
-import {BotMessageEmbed} from "../builders/BotMessageEmbed";
-// import {client} from "../index";
+import {InitialButtonRow} from "../rows/InitialButtonRow";
+import {MapPoolEmbed} from "../embeds/MapPoolEmbed";
+import {QueueEmbed} from "../embeds/QueueEmbed";
 
 const handleInitiateCommand = async (interaction: CommandInteraction) => {
     if (initiated) {
@@ -41,61 +42,10 @@ const handleInitiateCommand = async (interaction: CommandInteraction) => {
                     }]
                 }).then(async bc => {
                     updatePugQueueBotTextChannel(bc);
-                    const replaceMeWithMapTracking: boolean = false;
-                    const replaceMeWithMapPool: string[] = [
-                        "Farmhouse West",
-                        "Hideout West",
-                        "Ministry",
-                        "Outskirts West",
-                        "Powerplant West",
-                        "Precinct East",
-                        "Refinery",
-                        "Summit East",
-                        "Tell East",
-                        "Tell West",
-                        "Tideway West"
-                    ]
-                    const mapPoolEmbedProps: MessageEmbedOptions = {
-                        title: "Map Pool",
-                        fields: [
-                            {
-                                name: "Recently Played Maps",
-                                value: replaceMeWithMapTracking ? "3" : "No maps have been played yet.",
-                                inline: false
-                            },
-                            {
-                                name: "Available Maps",
-                                value: replaceMeWithMapPool
-                                    .toString()
-                                    .replace(/\s*,\s*|\s+,/g, "\n"),
-                                inline: false
-                            }
-                        ]
-                    };
-                    const queueEmbedProps: MessageEmbedOptions = {
-                        // author: client.user.username,
-                        title: "Queue",
-                        // thumbnail:,
-                        fields: [
-                            {
-                                name: `${queuedUsers.length}/10`,
-                                value: queuedUsers.length > 0 ?
-                                    queuedUsers.map(qu => memberNicknameMention(qu.id)).toString() :
-                                    "Waiting on first player.",
-                                inline: false
-                            }
-                        ],
-                        footer: {text: "Be the first to join the queue! Start a revolution!"}
-                    };
-                    const buttonRowProps: ButtonRowProps[] = [
-                        {customId: 'joinQueue', label: 'Join', style: 'SUCCESS', emoji: '➕'},
-                        {customId: 'leaveQueue', label: 'Leave', style: 'DANGER', emoji: '➖'},
-                        {customId: 'afkImmune', label: 'AFK Immune', style: 'PRIMARY', emoji: '⏳'}
-                    ];
                     await pugQueueBotTextChannel.send({
-                        content: bold("/----- Pickup Games -----/"),
-                        embeds: [BotMessageEmbed(mapPoolEmbedProps), BotMessageEmbed(queueEmbedProps)],
-                        components: [ButtonRow(buttonRowProps)]
+                        content: bold("/----- 𝙋𝙞𝙘𝙠𝙪𝙥 𝙂𝙖𝙢𝙚𝙨 -----/"),
+                        embeds: [MapPoolEmbed(), QueueEmbed()],
+                        components: [InitialButtonRow()]
                     }).then(m => updatePugQueueBotMessage(m));
                 });
                 await guild.channels.create("text-chat", {
@@ -117,10 +67,12 @@ const handleInitiateCommand = async (interaction: CommandInteraction) => {
     }
 };
 
+//TODO: Permissions on command
+
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('initiate')
-        .setDescription('Initiates the PUG Bot'),
+        .setName(CommandNameOption.initiate.valueOf())
+        .setDescription(CommandDescOption.initiate.valueOf()),
     async execute(interaction: CommandInteraction) {
         await handleInitiateCommand(interaction);
     }
