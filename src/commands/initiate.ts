@@ -10,7 +10,8 @@ import {
     updatePugQueueBotTextChannel,
     updatePugQueueCategory,
     updatePugQueueTextChannel,
-    updatePugQueueVoiceChannel
+    updatePugQueueVoiceChannel,
+    updateSuggestedMap
 } from "../state";
 import {InitialButtonRow} from "../rows/InitialButtonRow";
 import {MapPoolEmbed} from "../embeds/MapPoolEmbed";
@@ -42,6 +43,7 @@ const handleInitiateCommand = async (interaction: CommandInteraction) => {
                     }]
                 }).then(async bc => {
                     updatePugQueueBotTextChannel(bc);
+                    updateSuggestedMap();
                     await pugQueueBotTextChannel.send({
                         content: bold("/----- 𝙋𝙞𝙘𝙠𝙪𝙥 𝙂𝙖𝙢𝙚𝙨 -----/"),
                         embeds: [MapPoolEmbed(), QueueEmbed()],

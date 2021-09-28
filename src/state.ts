@@ -9,13 +9,8 @@ import {
     VoiceChannel
 } from "discord.js";
 
-export enum ButtonCustomIdOption {
-    'join' = `joinQueue`,
-    'leave' = 'leaveQueue',
-    'afkImmune' = 'afkImmune'
-}
-
 export enum CommandNameOption {
+    'afkImmune' = 'afkImmune',
     'initiate' = 'initiate',
     'join' = 'join',
     'leave' = 'leave',
@@ -24,11 +19,18 @@ export enum CommandNameOption {
 }
 
 export enum CommandDescOption {
+    'afkImmune' = 'Grants user offline immunity',
     'initiate' = 'Initiates the PUG Bot',
     'join' = 'Adds user to the PUG Queue',
     'leave' = 'Removes user from the PUG Queue',
     'ping' = 'Replies with Pong!',
     'terminate' = 'Terminates the PUG Bot'
+}
+
+export enum ButtonCustomIdOption {
+    'afkImmune' = 'afkImmune',
+    'join' = `joinQueue`,
+    'leave' = 'leaveQueue'
 }
 
 export enum MultiplesAction {
@@ -62,6 +64,52 @@ export const updatePugQueueVoiceChannel = (pqvc: VoiceChannel) => pugQueueVoiceC
 export let pugQueueBotMessage: Message;
 export const updatePugQueueBotMessage = (pqbm: Message) => pugQueueBotMessage = pqbm;
 
+export const previousPlayedMaps: string[] = [];
+export const updatePreviousPlayedMaps = (map: string, action: MultiplesAction) => {
+    switch (action) {
+        case MultiplesAction.ADD:
+            previousPlayedMaps.push(map);
+            break;
+        case MultiplesAction.REMOVE:
+            previousPlayedMaps.splice(previousPlayedMaps.indexOf(map));
+            break;
+        default:
+            break;
+    }
+};
+
+//TODO: configurable map pool
+export const availableMaps: string[] = [
+    "Farmhouse West",
+    "Hideout West",
+    "Ministry",
+    "Outskirts West",
+    "Powerplant West",
+    "Precinct East",
+    "Refinery",
+    "Summit East",
+    "Tell East",
+    "Tell West",
+    "Tideway West"
+];
+export const updateAvailableMaps = (map: string, action: MultiplesAction) => {
+    switch (action) {
+        case MultiplesAction.ADD:
+            availableMaps.push(map);
+            break;
+        case MultiplesAction.REMOVE:
+            availableMaps.splice(availableMaps.indexOf(map));
+            break;
+        default:
+            break;
+    }
+};
+
+export let suggestedMap: string;
+export const updateSuggestedMap = () => {
+    suggestedMap = availableMaps[Math.floor(Math.random() * availableMaps.length)];
+};
+
 export const queuedUsers: (User | PartialUser)[] = [];
 export const updateQueuedUsers = (user: (User | PartialUser), action: MultiplesAction): string => {
     switch (action) {
@@ -70,12 +118,13 @@ export const updateQueuedUsers = (user: (User | PartialUser), action: MultiplesA
             queuedUsers.push(user);
             return "You have been added to the PUG Queue!";
         case MultiplesAction.REMOVE:
+            if (!queuedUsers.find(qu => qu === user)) return "You need to join the PUG Queue before you can leave it.";
             queuedUsers.splice(queuedUsers.indexOf(user), 1);
             return "You have been removed from the PUG Queue!";
         default:
             return "Still need to handle default on updateQueuedUsers";
     }
-}
+};
 
 export const pugUsers: (User | PartialUser)[] = [];
 export const updatePugUsers = (user: (User | PartialUser), action: MultiplesAction) => {
@@ -89,4 +138,11 @@ export const updatePugUsers = (user: (User | PartialUser), action: MultiplesActi
         default:
             break;
     }
-}
+};
+
+export const resetBot = () => {
+    previousPlayedMaps.forEach(ppm => availableMaps.push(ppm));
+    previousPlayedMaps.splice(0, previousPlayedMaps.length);
+    queuedUsers.splice(0, queuedUsers.length);
+    pugUsers.splice(0, pugUsers.length);
+};

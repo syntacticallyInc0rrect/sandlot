@@ -8,6 +8,7 @@ import {
     pugQueueCategory,
     pugQueueTextChannel,
     pugQueueVoiceChannel,
+    resetBot,
     updateInitiate
 } from "../state";
 
@@ -62,6 +63,7 @@ const handleTerminateCommand = async (interaction: CommandInteraction) => {
             fetchReply: false
         });
         updateInitiate();
+        resetBot();
     }
 };
 

@@ -1,19 +1,5 @@
 import {MessageEmbed, MessageEmbedOptions} from "discord.js";
-
-const replaceMeWithMapTracking: boolean = false;
-const replaceMeWithMapPool: string[] = [
-    "Farmhouse West",
-    "Hideout West",
-    "Ministry",
-    "Outskirts West",
-    "Powerplant West",
-    "Precinct East",
-    "Refinery",
-    "Summit East",
-    "Tell East",
-    "Tell West",
-    "Tideway West"
-];
+import {availableMaps, previousPlayedMaps, suggestedMap} from "../state";
 
 export const MapPoolEmbed = (): MessageEmbed => {
     const props: MessageEmbedOptions = {
@@ -25,13 +11,18 @@ export const MapPoolEmbed = (): MessageEmbed => {
         title: "Map Pool",
         fields: [
             {
+                name: "Suggested Map",
+                value: suggestedMap,
+                inline: false
+            },
+            {
                 name: "Recently Played Maps",
-                value: replaceMeWithMapTracking ? "3"/*TODO*/ : "No maps have been played yet.",
+                value: previousPlayedMaps.length > 0 ? previousPlayedMaps.toString() : "No maps have been played yet.",
                 inline: false
             },
             {
                 name: "Available Maps",
-                value: replaceMeWithMapPool
+                value: availableMaps
                     .toString()
                     .replace(/\s*,\s*|\s+,/g, "\n"),
                 inline: false
