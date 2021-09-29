@@ -1,5 +1,5 @@
 import {MessageEmbed, MessageEmbedOptions} from "discord.js";
-import {queuedUsers} from "../state";
+import {matchSize, queuedUsers} from "../state";
 import {memberNicknameMention} from "@discordjs/builders";
 
 export const QueueEmbed = (): MessageEmbed => {
@@ -8,7 +8,7 @@ export const QueueEmbed = (): MessageEmbed => {
         thumbnail: {url: "https://cdn.discordapp.com/attachments/444642545650368515/892193157062729738/insurgency-logo-textured-512.png"},
         fields: [
             {
-                name: `${queuedUsers.length}/10`,
+                name: `${queuedUsers.length}/${matchSize}`,
                 value: queuedUsers.length > 0 ?
                     queuedUsers.map(qu => memberNicknameMention(qu.id))
                         .toString()

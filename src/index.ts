@@ -1,5 +1,15 @@
-import {Collection, Intents, Interaction, MessageReaction, PartialMessageReaction} from "discord.js";
-import {token} from "./secrets/config.json";
+import {
+    ApplicationCommand,
+    ApplicationCommandPermissionData,
+    Collection,
+    Guild,
+    Intents,
+    Interaction,
+    MessageReaction,
+    PartialMessageReaction,
+    Role
+} from "discord.js";
+import {guildId, token} from "./secrets/config.json";
 import * as fs from "fs";
 import {ButtonCustomIdOption, clientUser, CommandNameOption, updateClientUser} from "./state";
 
@@ -40,6 +50,12 @@ client.on('interactionCreate', async (interaction: Interaction) => {
                 await client.commands.get(CommandNameOption.leave.valueOf()).execute(interaction);
                 break;
             case ButtonCustomIdOption.afkImmune.valueOf():
+                break;
+            case ButtonCustomIdOption.ready.valueOf():
+                await client.commands.get(CommandNameOption.ready.valueOf()).execute(interaction);
+                break;
+            case ButtonCustomIdOption.not_ready.valueOf():
+                await client.commands.get(CommandNameOption.not_ready.valueOf()).execute(interaction);
                 break;
             default:
                 return;

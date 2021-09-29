@@ -1,17 +1,17 @@
 import {SlashCommandBuilder} from "@discordjs/builders";
-import {CommandInteraction} from "discord.js";
 import {
+    cancelActivePug,
     CommandDescOption,
     CommandNameOption,
     initiated,
-    MultiplesAction,
     pugQueueBotMessage,
-    updateQueuedUsers
+    queuedUsers,
 } from "../state";
+import {CommandInteraction} from "discord.js";
 import {MapPoolEmbed} from "../embeds/MapPoolEmbed";
 import {QueueEmbed} from "../embeds/QueueEmbed";
 
-const handleLeaveCommand = async (interaction: CommandInteraction) => {
+const handleCancelCommand = async (interaction: CommandInteraction) => {
     if (!initiated) {
         await interaction.reply({
             content: "There is no initiated PUG Bot to be added to. " +
@@ -19,13 +19,19 @@ const handleLeaveCommand = async (interaction: CommandInteraction) => {
             ephemeral: true,
             fetchReply: false
         });
+    } else if (queuedUsers.length < 1) {
+        await interaction.reply({
+            content: "There is no one active PUG to cancel",
+            ephemeral: true,
+            fetchReply: false
+        });
     } else {
-        const replyMessage: string = updateQueuedUsers(interaction.user, MultiplesAction.REMOVE);
+        cancelActivePug(0);
         await pugQueueBotMessage.edit({
             embeds: [MapPoolEmbed(), QueueEmbed()]
         });
         await interaction.reply({
-            content: replyMessage,
+            content: "The PUG Queue has been reset",
             ephemeral: true,
             fetchReply: false
         });
@@ -34,10 +40,14 @@ const handleLeaveCommand = async (interaction: CommandInteraction) => {
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName(CommandNameOption.leave.valueOf())
-        .setDescription(CommandDescOption.leave.valueOf()),
-        // .setDefaultPermission(true),
+        .setName(CommandNameOption.cancel)
+        .setDescription(CommandDescOption.cancel)
+        // .setDefaultPermission(false)
+        .addIntegerOption(option => option.setName('input')
+            .setDescription('The ID for the active PUG to be cancelled')
+            .setRequired(true)
+        ),
     async execute(interaction: CommandInteraction) {
-        await handleLeaveCommand(interaction);
+        await handleCancelCommand(interaction);
     },
 };

@@ -1,11 +1,10 @@
 import {MessageActionRow, MessageButton} from "discord.js";
 import {ButtonCustomIdOption, ButtonRowProps} from "../state";
 
-export const InitialButtonRow = (): MessageActionRow => {
+export const ReadyCheckButtonRow = (): MessageActionRow => {
     const props: ButtonRowProps[] = [
-        {customId: ButtonCustomIdOption.join.valueOf(), label: 'Join', style: 'SUCCESS', emoji: '➕'},
-        {customId: ButtonCustomIdOption.leave.valueOf(), label: 'Leave', style: 'DANGER', emoji: '➖'},
-        // {customId: ButtonCustomIdOption.afkImmune.valueOf(), label: 'AFK Immune', style: 'PRIMARY', emoji: '⏳'}
+        {customId: ButtonCustomIdOption.ready.valueOf(), label: 'Ready', style: 'SUCCESS', emoji: '✔'},
+        {customId: ButtonCustomIdOption.not_ready.valueOf(), label: 'Cancel', style: 'DANGER', emoji: '✖'},
     ];
     return new MessageActionRow()
         .addComponents(props

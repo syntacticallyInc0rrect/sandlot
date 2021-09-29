@@ -4,14 +4,15 @@ import {
     CommandDescOption,
     CommandNameOption,
     initiated,
-    MultiplesAction,
     pugQueueBotMessage,
-    updateQueuedUsers
+    queuedUsers,
+    wipeQueuedUsers
 } from "../state";
 import {MapPoolEmbed} from "../embeds/MapPoolEmbed";
 import {QueueEmbed} from "../embeds/QueueEmbed";
 
-const handleLeaveCommand = async (interaction: CommandInteraction) => {
+
+const handleResetCommand = async (interaction: CommandInteraction) => {
     if (!initiated) {
         await interaction.reply({
             content: "There is no initiated PUG Bot to be added to. " +
@@ -19,13 +20,19 @@ const handleLeaveCommand = async (interaction: CommandInteraction) => {
             ephemeral: true,
             fetchReply: false
         });
+    } else if (queuedUsers.length < 1) {
+        await interaction.reply({
+            content: "There is no one in the PUG Queue to remove",
+            ephemeral: true,
+            fetchReply: false
+        });
     } else {
-        const replyMessage: string = updateQueuedUsers(interaction.user, MultiplesAction.REMOVE);
+        wipeQueuedUsers();
         await pugQueueBotMessage.edit({
             embeds: [MapPoolEmbed(), QueueEmbed()]
         });
         await interaction.reply({
-            content: replyMessage,
+            content: "The PUG Queue has been reset",
             ephemeral: true,
             fetchReply: false
         });
@@ -34,10 +41,10 @@ const handleLeaveCommand = async (interaction: CommandInteraction) => {
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName(CommandNameOption.leave.valueOf())
-        .setDescription(CommandDescOption.leave.valueOf()),
-        // .setDefaultPermission(true),
+        .setName(CommandNameOption.reset)
+        .setDescription(CommandDescOption.reset),
+        // .setDefaultPermission(false),
     async execute(interaction: CommandInteraction) {
-        await handleLeaveCommand(interaction);
+       await handleResetCommand(interaction);
     },
 };

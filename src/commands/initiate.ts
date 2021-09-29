@@ -75,6 +75,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName(CommandNameOption.initiate.valueOf())
         .setDescription(CommandDescOption.initiate.valueOf()),
+        // .setDefaultPermission(false),
     async execute(interaction: CommandInteraction) {
         await handleInitiateCommand(interaction);
     }
