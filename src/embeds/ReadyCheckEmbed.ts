@@ -1,23 +1,17 @@
 import {MessageEmbed, MessageEmbedOptions, PartialUser, User} from "discord.js";
 import {memberNicknameMention} from "@discordjs/builders";
+import {ReadyCheckPlayer} from "../state/state";
 
-type ReadyCheckPlayer = {
-    player: (User | PartialUser),
-    isReady: boolean
-}
 
-export const ReadyCheckEmbed = (players: (User | PartialUser)[]): MessageEmbed => {
-    let readyCheckPlayers: ReadyCheckPlayer[] = players.map(p => {
-        return {player: p, isReady: false};
-    });
+export const ReadyCheckEmbed = (players: ReadyCheckPlayer[]): MessageEmbed => {
     const props: MessageEmbedOptions = {
         title: `Ready Check!`,
         thumbnail: {url: "https://cdn.discordapp.com/attachments/444642545650368515/892193157062729738/insurgency-logo-textured-512.png"},
         fields: [
             {
                 name: `Who is ready?`,
-                value: readyCheckPlayers.map(
-                    rcp => `${rcp.isReady ? '✔' : '❌'}  ${memberNicknameMention(rcp.player.id)}`
+                value: players.map(
+                    p => `${p.isReady ? '✅' : '❌'}  ${memberNicknameMention(p.user.id)}`
                 )
                     .toString()
                     .replace(/\s*,\s*|\s+,/g, "\n"),

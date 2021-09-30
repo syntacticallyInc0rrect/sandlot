@@ -1,8 +1,9 @@
 import {CategoryChannel, Message, PartialUser, TextChannel, User, VoiceChannel} from "discord.js";
+import {ReadyCheckPlayer} from "../state/state";
 
 export class PickupGame {
     private readonly _id: number;
-    private readonly _players: (User | PartialUser)[];
+    private readonly _players: ReadyCheckPlayer[];
     private readonly _category: CategoryChannel;
     private readonly _textChannel: TextChannel;
     private readonly _voiceChannel: VoiceChannel;
@@ -14,7 +15,7 @@ export class PickupGame {
 
     constructor(
         id: number,
-        players: (User | PartialUser)[],
+        players: ReadyCheckPlayer[],
         category: CategoryChannel,
         textChannel: TextChannel,
         voiceChannel: VoiceChannel,
@@ -32,7 +33,7 @@ export class PickupGame {
         return this._id;
     }
 
-    get players(): (User | PartialUser)[] {
+    get players(): ReadyCheckPlayer[] {
         return this._players;
     }
 

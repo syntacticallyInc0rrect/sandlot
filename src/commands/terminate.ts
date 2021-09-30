@@ -17,8 +17,8 @@ import {
 const handleTerminateCommand = async (interaction: CommandInteraction) => {
     if (!initiated) {
         await interaction.reply({
-            content: "There is no initiated PUG Bot to be terminated. " +
-                "Run the /initiate command if you would like to initiate the PUG Bot.",
+            content: "There is no initiated Pickup Game Bot to be terminated. " +
+                "Run the /initiate command if you would like to initiate the Pickup Game Bot.",
             ephemeral: true,
             fetchReply: false
         });

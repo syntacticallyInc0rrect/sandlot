@@ -61,6 +61,11 @@ export type ButtonRowProps = {
     disabled?: boolean
 };
 
+export type ReadyCheckPlayer = {
+    user: (User | PartialUser),
+    isReady: boolean
+}
+
 export let initiated: boolean;
 export const updateInitiate = () => initiated = !initiated;
 
