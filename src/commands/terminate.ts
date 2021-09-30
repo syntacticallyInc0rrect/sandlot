@@ -1,10 +1,10 @@
 import {SlashCommandBuilder} from '@discordjs/builders';
-import {Channel, CommandInteraction} from "discord.js";
+import {CommandInteraction} from "discord.js";
 import {
     activePugs,
+    cancelActivePug,
     CommandDescOption,
     CommandNameOption,
-    guild,
     initiated,
     pugQueueBotTextChannel,
     pugQueueCategory,
@@ -13,16 +13,6 @@ import {
     resetBot,
     updateInitiate
 } from "../state/state";
-import {PickupGame} from "../classes/PickupGame";
-
-const deletePugChannels = async (pug: PickupGame) => {
-    const channelExists = (channel: Channel) => !!guild.channels.cache.get(channel.id);
-    channelExists(pug.category) && await pug.category.delete();
-    channelExists(pug.textChannel) && await pug.textChannel.delete();
-    channelExists(pug.voiceChannel) && await pug.voiceChannel.delete();
-    pug.redTeamVoiceChannel && channelExists(pug.redTeamVoiceChannel) && await pug.redTeamVoiceChannel.delete();
-    pug.blueTeamVoiceChannel && channelExists(pug.blueTeamVoiceChannel) && await pug.blueTeamVoiceChannel.delete();
-};
 
 const handleTerminateCommand = async (interaction: CommandInteraction) => {
     if (!initiated) {
@@ -69,7 +59,7 @@ const handleTerminateCommand = async (interaction: CommandInteraction) => {
                     break;
             }
         });
-        await activePugs.forEach(ap => deletePugChannels(ap));
+        await activePugs.forEach(ap => cancelActivePug(ap));
         updateInitiate();
         resetBot();
         await interaction.reply({

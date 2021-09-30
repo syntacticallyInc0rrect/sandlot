@@ -18,7 +18,7 @@ export const CommandPermissions = async () => {
             permission: true
         }
     ];
-    let commandsList = await guild.commands.fetch();
+    const commandsList = await guild.commands.fetch();
     await commandsList.forEach(c => {
         guild.commands.permissions.add({
             command: c.id,

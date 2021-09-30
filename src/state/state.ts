@@ -1,5 +1,6 @@
 import {
     CategoryChannel,
+    Channel,
     Client,
     EmojiIdentifierResolvable,
     Guild,
@@ -162,10 +163,18 @@ export const updateActivePugs = (pug: PickupGame, action: MultiplesAction) => {
             break;
     }
 };
-export const cancelActivePug = (id: number) => {
-    //TODO: maybe respond with whether the pug was found or not?
-    const pugToBeCancelled: PickupGame | undefined = activePugs.find(ap => ap.id === id);
-    pugToBeCancelled && activePugs.splice(activePugs.indexOf(pugToBeCancelled), 1);
+export const cancelActivePug = async (activePug: PickupGame) => {
+    const channelExists = (channel: Channel) => !!guild.channels.cache.get(channel.id);
+    channelExists(activePug.category) && await activePug.category.delete();
+    channelExists(activePug.textChannel) && await activePug.textChannel.delete();
+    channelExists(activePug.voiceChannel) && await activePug.voiceChannel.delete();
+    activePug.redTeamVoiceChannel &&
+        channelExists(activePug.redTeamVoiceChannel) &&
+            await activePug.redTeamVoiceChannel.delete();
+    activePug.blueTeamVoiceChannel &&
+        channelExists(activePug.blueTeamVoiceChannel) &&
+            await activePug.blueTeamVoiceChannel.delete();
+    activePugs.splice(activePugs.indexOf(activePug), 1);
 };
 
 export const cancelAllActivePugs = () => activePugs.splice(0, activePugs.length);
