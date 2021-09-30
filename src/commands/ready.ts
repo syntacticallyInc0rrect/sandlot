@@ -26,6 +26,12 @@ const handleReadyCommand = async (interaction: CommandInteraction) => {
             ephemeral: true,
             fetchReply: false
         });
+    } else if (!!activePug.players.find(p => p.user === interaction.user)!.isReady) {
+        await interaction.reply({
+            content: "You are already Ready for your Pickup Game, no need to spam!",
+            ephemeral: true,
+            fetchReply: false
+        });
     } else {
         activePug.players.find(p => p.user === interaction.user)!.isReady = true;
         if (!!activePug.players.find(p => !p.isReady)) {
