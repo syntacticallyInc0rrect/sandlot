@@ -1,7 +1,6 @@
 import {bold, SlashCommandBuilder} from '@discordjs/builders';
 import {CommandInteraction, Role} from "discord.js";
 import {
-    client,
     CommandDescOption,
     CommandNameOption,
     initiated,
