@@ -1,6 +1,7 @@
 import {bold, SlashCommandBuilder} from "@discordjs/builders";
 import {CategoryChannel, CommandInteraction, Message, Role, TextChannel, VoiceChannel} from "discord.js";
 import {
+    activePugs,
     CommandDescOption,
     CommandNameOption,
     increasePugCount,
@@ -87,6 +88,12 @@ const handleJoinCommand = async (interaction: CommandInteraction) => {
         await interaction.reply({
             content: "There is no initiated Pickup Game Bot to be added to. " +
                 "Run the /initiate command if you would like to initiate the Pickup Game Bot.",
+            ephemeral: true,
+            fetchReply: false
+        });
+    } else if (!!activePugs.find(ap => ap.players.find(p => p.user === interaction.user))) {
+        await interaction.reply({
+            content: "You are already in an active Pickup Game. You cannot Queue again until your Pickup Game is over.",
             ephemeral: true,
             fetchReply: false
         });

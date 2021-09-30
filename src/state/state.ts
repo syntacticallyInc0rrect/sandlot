@@ -16,6 +16,7 @@ import {PickupGame} from "../classes/PickupGame";
 export enum CommandNameOption {
     'afkImmune' = 'afkImmune',
     'cancel' = 'cancel',
+    'end' = 'end',
     'initiate' = 'initiate',
     'join' = 'join',
     'leave' = 'leave',
@@ -29,6 +30,7 @@ export enum CommandNameOption {
 export enum CommandDescOption {
     'afkImmune' = 'Grants user offline immunity',
     'cancel' = 'Cancels an active PUG',
+    'end' = 'Ends current PUG',
     'initiate' = 'Initiates the PUG Bot',
     'join' = 'Adds user to the PUG Queue',
     'leave' = 'Removes user from the PUG Queue',
