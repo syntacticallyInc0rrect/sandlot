@@ -24,9 +24,9 @@ export const ReadyCheckEmbed = (players: (User | PartialUser)[]): MessageEmbed =
                 inline: false
             },
         ]
-            ,
+        ,
         footer: {
-            text:"Let's do this!",
+            text: "Let's do this!",
             icon_url: "https://images-ext-1.discordapp.net/external/ZUgVOtxXsm71dQ6V7hxBhuIBp4z7-7mWRj3UNiTPPA0/https/i.imgur.com/h2xgWfa.png?width=681&height=676"
         }
     };

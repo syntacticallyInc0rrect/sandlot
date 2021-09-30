@@ -43,8 +43,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName(CommandNameOption.reset)
         .setDescription(CommandDescOption.reset),
-        // .setDefaultPermission(false),
     async execute(interaction: CommandInteraction) {
-       await handleResetCommand(interaction);
+        await handleResetCommand(interaction);
     },
 };

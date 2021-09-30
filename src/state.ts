@@ -1,6 +1,8 @@
 import {
     CategoryChannel,
+    Client,
     EmojiIdentifierResolvable,
+    Guild,
     Message,
     MessageButtonStyleResolvable,
     PartialUser,
@@ -61,8 +63,11 @@ export type ButtonRowProps = {
 export let initiated: boolean;
 export const updateInitiate = () => initiated = !initiated;
 
-export let clientUser: User;
-export const updateClientUser = (u: User) => clientUser = u;
+export let client: Client;
+export const updateClient = (c: Client) => client = c;
+
+export let guild: Guild;
+export const updateGuild = (g: Guild) => guild = g;
 
 export let pugQueueCategory: CategoryChannel;
 export const updatePugQueueCategory = (pqc: CategoryChannel) => pugQueueCategory = pqc;

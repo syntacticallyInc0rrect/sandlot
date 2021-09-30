@@ -42,7 +42,6 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName(CommandNameOption.cancel)
         .setDescription(CommandDescOption.cancel)
-        // .setDefaultPermission(false)
         .addIntegerOption(option => option.setName('input')
             .setDescription('The ID for the active PUG to be cancelled')
             .setRequired(true)

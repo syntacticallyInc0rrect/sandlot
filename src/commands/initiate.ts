@@ -1,6 +1,7 @@
 import {bold, SlashCommandBuilder} from '@discordjs/builders';
 import {CommandInteraction, Role} from "discord.js";
 import {
+    client,
     CommandDescOption,
     CommandNameOption,
     initiated,
@@ -74,8 +75,8 @@ const handleInitiateCommand = async (interaction: CommandInteraction) => {
 module.exports = {
     data: new SlashCommandBuilder()
         .setName(CommandNameOption.initiate.valueOf())
-        .setDescription(CommandDescOption.initiate.valueOf()),
-        // .setDefaultPermission(false),
+        .setDescription(CommandDescOption.initiate.valueOf())
+        .setDefaultPermission(false),
     async execute(interaction: CommandInteraction) {
         await handleInitiateCommand(interaction);
     }

@@ -6,7 +6,6 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName(CommandNameOption.ready)
         .setDescription(CommandDescOption.ready),
-        // .setDefaultPermission(true),
     async execute(interaction: CommandInteraction) {
         await interaction.reply({
             content: 'Ready feature coming soon!',

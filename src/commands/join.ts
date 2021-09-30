@@ -110,7 +110,6 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName(CommandNameOption.join.valueOf())
         .setDescription(CommandDescOption.join.valueOf()),
-        // .setDefaultPermission(true),
     async execute(interaction: CommandInteraction) {
         await handleJoinCommand(interaction);
     },
