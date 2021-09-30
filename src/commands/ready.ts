@@ -64,7 +64,8 @@ const handleReadyCommand = async (interaction: CommandInteraction) => {
                 content: "/----- 𝙂𝙖𝙢𝙚 𝙏𝙞𝙢𝙚! -----/",
                 embeds: [PickupGameEmbed(activePug)],
                 components: []
-            })
+            });
+            await activePug.voiceChannel.delete();
         }
         await interaction.reply({
             content: "You are now Ready for your Pickup Game!",
