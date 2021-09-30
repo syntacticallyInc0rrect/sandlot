@@ -1,5 +1,5 @@
 import {MessageActionRow, MessageButton} from "discord.js";
-import {ButtonCustomIdOption, ButtonRowProps} from "../state";
+import {ButtonCustomIdOption, ButtonRowProps} from "../state/state";
 
 export const InitialButtonRow = (): MessageActionRow => {
     const props: ButtonRowProps[] = [

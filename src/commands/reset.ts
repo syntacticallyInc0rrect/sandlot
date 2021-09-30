@@ -7,7 +7,7 @@ import {
     pugQueueBotMessage,
     queuedUsers,
     wipeQueuedUsers
-} from "../state";
+} from "../state/state";
 import {MapPoolEmbed} from "../embeds/MapPoolEmbed";
 import {QueueEmbed} from "../embeds/QueueEmbed";
 
@@ -42,7 +42,8 @@ const handleResetCommand = async (interaction: CommandInteraction) => {
 module.exports = {
     data: new SlashCommandBuilder()
         .setName(CommandNameOption.reset)
-        .setDescription(CommandDescOption.reset),
+        .setDescription(CommandDescOption.reset)
+        .setDefaultPermission(false),
     async execute(interaction: CommandInteraction) {
         await handleResetCommand(interaction);
     },

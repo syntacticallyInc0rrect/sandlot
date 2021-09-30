@@ -10,7 +10,7 @@ import {
     pugQueueVoiceChannel,
     resetBot,
     updateInitiate
-} from "../state";
+} from "../state/state";
 
 const handleTerminateCommand = async (interaction: CommandInteraction) => {
     if (!initiated) {
@@ -70,7 +70,8 @@ const handleTerminateCommand = async (interaction: CommandInteraction) => {
 module.exports = {
     data: new SlashCommandBuilder()
         .setName(CommandNameOption.terminate.valueOf())
-        .setDescription(CommandDescOption.terminate.valueOf()),
+        .setDescription(CommandDescOption.terminate.valueOf())
+        .setDefaultPermission(false),
     async execute(interaction: CommandInteraction) {
         await handleTerminateCommand(interaction);
     },

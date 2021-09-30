@@ -1,5 +1,5 @@
 import {MessageEmbed, MessageEmbedOptions} from "discord.js";
-import {matchSize, queuedUsers} from "../state";
+import {matchSize, queuedUsers} from "../state/state";
 import {memberNicknameMention} from "@discordjs/builders";
 
 export const QueueEmbed = (): MessageEmbed => {

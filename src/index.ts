@@ -1,15 +1,15 @@
 import {
-    ApplicationCommandPermissionData,
     Collection,
     Intents,
     Interaction,
     MessageReaction,
     PartialMessageReaction,
-    Role
 } from "discord.js";
 import {guildId, token} from "./secrets/config.json";
 import * as fs from "fs";
-import {ButtonCustomIdOption, CommandNameOption, guild, updateClient, updateGuild} from "./state";
+import {ButtonCustomIdOption, CommandNameOption, updateClient, updateGuild} from "./state/state";
+import {DeployCommands} from "./init/DeployCommands";
+import {CommandPermissions} from "./init/CommandPermissions";
 
 const {Client} = require('discord.js');
 const client = new Client({intents: [Intents.FLAGS.GUILDS]});
@@ -25,27 +25,8 @@ client.on('ready', async () => {
     updateClient(client);
     updateGuild(client.guilds.cache.get(guildId));
     console.log(`Logged in as ${client.user.tag}!`);
-    const adminRole: Role | undefined = guild.roles.cache.find(r => r.name.toLowerCase() === 'admin');
-    if (!adminRole) throw Error("You must have an Admin Role in your Guild in order to use this bot.");
-    const permissions: ApplicationCommandPermissionData[] = [
-        {
-            id: adminRole.id,
-            type: 'ROLE',
-            permission: true,
-        },
-        {
-            id: '442179773633003530',
-            type: 'USER',
-            permission: true
-        }
-    ];
-    let commandsList = await guild.commands.fetch();
-    await commandsList.forEach(c => {
-        guild.commands.permissions.add({
-            command: c.id,
-            permissions: permissions
-        })
-    });
+    await DeployCommands();
+    await CommandPermissions();
 });
 
 client.on('interactionCreate', async (interaction: Interaction) => {

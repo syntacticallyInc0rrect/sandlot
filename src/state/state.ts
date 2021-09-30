@@ -10,7 +10,7 @@ import {
     User,
     VoiceChannel
 } from "discord.js";
-import {PickupGame} from "./classes/PickupGame";
+import {PickupGame} from "../classes/PickupGame";
 
 export enum CommandNameOption {
     'afkImmune' = 'afkImmune',

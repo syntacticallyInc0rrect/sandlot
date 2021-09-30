@@ -6,7 +6,7 @@ import {
     initiated,
     pugQueueBotMessage,
     queuedUsers,
-} from "../state";
+} from "../state/state";
 import {CommandInteraction} from "discord.js";
 import {MapPoolEmbed} from "../embeds/MapPoolEmbed";
 import {QueueEmbed} from "../embeds/QueueEmbed";
@@ -42,6 +42,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName(CommandNameOption.cancel)
         .setDescription(CommandDescOption.cancel)
+        .setDefaultPermission(false)
         .addIntegerOption(option => option.setName('input')
             .setDescription('The ID for the active PUG to be cancelled')
             .setRequired(true)

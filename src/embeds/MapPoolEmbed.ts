@@ -1,5 +1,5 @@
 import {MessageEmbed, MessageEmbedOptions} from "discord.js";
-import {availableMaps, previousPlayedMaps, suggestedMap} from "../state";
+import {availableMaps, previousPlayedMaps, suggestedMap} from "../state/state";
 
 export const MapPoolEmbed = (): MessageEmbed => {
     const props: MessageEmbedOptions = {

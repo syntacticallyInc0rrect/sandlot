@@ -29,7 +29,6 @@
   "scripts": {
     "build": "tsc",
     "clean": "echo \"Error: you have not set up a channel clean up yet.\" && exit 1",
-    "deploy-commands": "ts-node ./src/deploy-commands.ts",
     "dev": "ts-node ./src/index.ts",
     "start": "tsc && node ./bin/index.js",
     "test": "echo \"Error: you have not set up tests yet. You should probably get on that...\" && exit 1"

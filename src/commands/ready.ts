@@ -1,6 +1,6 @@
 import {SlashCommandBuilder} from '@discordjs/builders';
 import {CommandInteraction} from "discord.js";
-import {CommandDescOption, CommandNameOption} from "../state";
+import {CommandDescOption, CommandNameOption} from "../state/state";
 
 module.exports = {
     data: new SlashCommandBuilder()
