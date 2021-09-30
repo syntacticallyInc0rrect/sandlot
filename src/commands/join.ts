@@ -7,6 +7,7 @@ import {
     increasePugCount,
     initiated,
     matchSize,
+    movePlayersToVoiceChannel,
     MultiplesAction,
     pugCount,
     pugQueueBotMessage,
@@ -29,17 +30,6 @@ const createNewActivePug = async (interaction: CommandInteraction) => {
     let textChannel: TextChannel;
     let voiceChannel: VoiceChannel;
     let message: Message;
-
-    const movePlayersToVoiceChannel = async () => {
-        if (!guild) throw Error("Your PUG is attempting to kick off in a non-existent Guild.");
-        guild.members.cache.forEach(m => {
-            if (m.voice.channel !== null) {
-                if (players.find(p => p.id === m.user.id)) {
-                    m.voice.setChannel(voiceChannel);
-                }
-            }
-        });
-    };
 
     if (!guild) throw Error("You must run this command inside of a Discord Guild.");
     await guild.channels.create(`PUG #${pugCount}`, {type: "GUILD_CATEGORY"})
@@ -78,7 +68,7 @@ const createNewActivePug = async (interaction: CommandInteraction) => {
                 ),
                 MultiplesAction.ADD
             );
-            await movePlayersToVoiceChannel();
+            await movePlayersToVoiceChannel(players, voiceChannel);
             wipeQueuedUsers();
         });
 };
