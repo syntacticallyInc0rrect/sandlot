@@ -1,8 +1,9 @@
 import {SlashCommandBuilder} from '@discordjs/builders';
 import {CommandInteraction} from "discord.js";
-import {activePugs, CommandDescOption, CommandNameOption, initiated} from "../state/state";
+import {activePugs, assignRandomTeams, CommandDescOption, CommandNameOption, initiated} from "../state/state";
 import {PickupGame} from "../classes/PickupGame";
 import {ReadyCheckEmbed} from "../embeds/ReadyCheckEmbed";
+import {PickupGameEmbed} from "../embeds/PickupGameEmbed";
 
 const handleReadyCommand = async (interaction: CommandInteraction) => {
     const activePug: PickupGame | undefined = activePugs.find(ap => ap.players.find(p => p.user === interaction.user));
@@ -27,9 +28,18 @@ const handleReadyCommand = async (interaction: CommandInteraction) => {
         });
     } else {
         activePug.players.find(p => p.user === interaction.user)!.isReady = true;
-        await activePug.message.edit({
-            embeds: [ReadyCheckEmbed(activePug.players)]
-        });
+        if (!!activePug.players.find(p => !p.isReady)) {
+            await activePug.message.edit({
+                embeds: [ReadyCheckEmbed(activePug.players)]
+            });
+        } else {
+            assignRandomTeams(activePug);
+            await activePug.message.edit({
+                content: "/----- 𝔾𝕒𝕞𝕖 𝕋𝕚𝕞𝕖! -----/",
+                embeds: [PickupGameEmbed(activePug)],
+                components: []
+            })
+        }
         await interaction.reply({
             content: "You are now Ready for your Pickup Game!",
             ephemeral: true,

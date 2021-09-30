@@ -174,11 +174,11 @@ export const cancelActivePug = async (activePug: PickupGame) => {
     channelExists(activePug.textChannel) && await activePug.textChannel.delete();
     channelExists(activePug.voiceChannel) && await activePug.voiceChannel.delete();
     activePug.redTeamVoiceChannel &&
-        channelExists(activePug.redTeamVoiceChannel) &&
-            await activePug.redTeamVoiceChannel.delete();
+    channelExists(activePug.redTeamVoiceChannel) &&
+    await activePug.redTeamVoiceChannel.delete();
     activePug.blueTeamVoiceChannel &&
-        channelExists(activePug.blueTeamVoiceChannel) &&
-            await activePug.blueTeamVoiceChannel.delete();
+    channelExists(activePug.blueTeamVoiceChannel) &&
+    await activePug.blueTeamVoiceChannel.delete();
     activePugs.splice(activePugs.indexOf(activePug), 1);
 };
 
@@ -196,3 +196,15 @@ export const resetBot = () => {
     wipeQueuedUsers();
     cancelAllActivePugs();
 };
+
+export const assignRandomTeams = (pug: PickupGame) => {
+    const players = pug.players.map(p => p.user);
+    const totalPlayerCount = pug.players.length;
+    const teamCount = totalPlayerCount / 2;
+    for (let i = 0; i < teamCount; i++) {
+        const randomPlayer = players[Math.floor(Math.random() * players.length)];
+        pug.redTeam.push(randomPlayer);
+        players.splice(players.indexOf(randomPlayer), 1);
+    }
+    pug.blueTeam = [...players];
+}
