@@ -21,8 +21,10 @@ import {QueueEmbed} from "../embeds/QueueEmbed";
 import {PickupGame} from "../classes/PickupGame";
 import {ReadyCheckEmbed} from "../embeds/ReadyCheckEmbed";
 import {ReadyCheckButtonRow} from "../rows/ReadyCheckButtonRow";
-import {ReadyCheckDM} from "../direct_messages/ReadyCheckDM";
+import {SendReadyCheckDirectMessages} from "../direct_messages/SendReadyCheckDirectMessages";
 import {MoveUsersToVoiceChannel} from "../helpers/MoveUsersToVoiceChannel";
+import {GetRoles} from "../helpers/GetRoles";
+import {ReadyCheckDMEmbed} from "../embeds/ReadyCheckDMEmbed";
 
 const createNewActivePug = async (interaction: CommandInteraction) => {
     const guild = interaction.guild;
@@ -33,6 +35,7 @@ const createNewActivePug = async (interaction: CommandInteraction) => {
     let message: Message;
 
     if (!guild) throw Error("You must run this command inside of a Discord Guild.");
+    increasePugCount();
     await guild.channels.create(`PUG #${pugCount}`, {type: "GUILD_CATEGORY"})
         .then(async cat => {
             category = cat;
@@ -41,11 +44,7 @@ const createNewActivePug = async (interaction: CommandInteraction) => {
             await guild.channels.create("ready-check", {
                 parent: category,
                 type: "GUILD_TEXT",
-                permissionOverwrites: [{
-                    id: everyoneRole.id,
-                    deny: ['SEND_MESSAGES', 'ADD_REACTIONS'],
-                    allow: ['VIEW_CHANNEL']
-                }]
+                permissionOverwrites: GetRoles(guild)
             }).then(async tc => {
                 textChannel = tc;
                 await textChannel.send({
@@ -58,18 +57,15 @@ const createNewActivePug = async (interaction: CommandInteraction) => {
                 parent: category,
                 type: "GUILD_VOICE"
             }).then(vc => voiceChannel = vc);
-            updateActivePugs(
-                new PickupGame(
-                    pugCount,
-                    players.map(p => <ReadyCheckPlayer>{user: p, isReady: false}),
-                    category,
-                    textChannel,
-                    voiceChannel,
-                    message
-                ),
-                MultiplesAction.ADD
-            );
-            await ReadyCheckDM(players, textChannel);
+            updateActivePugs(new PickupGame(
+                pugCount,
+                players.map(p => <ReadyCheckPlayer>{user: p, isReady: false}),
+                category,
+                textChannel,
+                voiceChannel,
+                message
+            ), MultiplesAction.ADD);
+            await SendReadyCheckDirectMessages(players, textChannel);
             await MoveUsersToVoiceChannel(players, voiceChannel);
             wipeQueuedUsers();
         });
@@ -92,7 +88,6 @@ const handleJoinCommand = async (interaction: CommandInteraction) => {
     } else {
         const replyMessage: string = updateQueuedUsers(interaction.user, MultiplesAction.ADD);
         if (queuedUsers.length === matchSize) {
-            increasePugCount();
             await createNewActivePug(interaction);
         }
         await pugQueueBotMessage.edit({

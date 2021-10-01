@@ -7,32 +7,14 @@ import {PickupGameEmbed} from "../embeds/PickupGameEmbed";
 
 const handleReadyCommand = async (interaction: CommandInteraction) => {
     const activePug: PickupGame | undefined = activePugs.find(ap => ap.players.find(p => p.user === interaction.user));
-    if (!initiated) {
-        await interaction.reply({
-            content: "There is no initiated Pickup Game Bot for you to Ready-Up to. " +
-                "Run the /initiate command if you would like to initiate the Pickup Game Bot.",
-            ephemeral: true,
-            fetchReply: false
-        });
-    } else if (!activePug) {
-        await interaction.reply({
-            content: "You are not in an active Pickup Game to Ready-Up to.",
-            ephemeral: true,
-            fetchReply: false
-        });
-    } else if (!!activePug.redTeamVoiceChannel) {
-        await interaction.reply({
-            content: "Your Pickup Game is already passed the Ready Check phase.",
-            ephemeral: true,
-            fetchReply: false
-        });
-    } else if (!!activePug.players.find(p => p.user === interaction.user)!.isReady) {
-        await interaction.reply({
-            content: "You are already Ready for your Pickup Game, no need to spam!",
-            ephemeral: true,
-            fetchReply: false
-        });
-    } else {
+    const replyContent = (!initiated) ?
+        "There is no initiated Pickup Game Bot for you to Ready-Up to. " +
+        "Run the /initiate command if you would like to initiate the Pickup Game Bot." :
+        (!activePug) ? "You are not in an active Pickup Game to Ready-Up to." :
+            (!!activePug.redTeamVoiceChannel) ?
+                "Your Pickup Game is already passed the Ready Check phase." :
+                "You are now Ready for your Pickup Game!";
+    if (initiated && !!activePug && !activePug.redTeamVoiceChannel) {
         activePug.players.find(p => p.user === interaction.user)!.isReady = true;
         if (!!activePug.players.find(p => !p.isReady)) {
             await activePug.message.edit({
@@ -73,12 +55,12 @@ const handleReadyCommand = async (interaction: CommandInteraction) => {
             });
             await activePug.voiceChannel.delete();
         }
-        await interaction.reply({
-            content: "You are now Ready for your Pickup Game!",
-            ephemeral: true,
-            fetchReply: false
-        });
     }
+    await interaction.reply({
+        content: replyContent,
+        ephemeral: true,
+        fetchReply: false
+    });
 };
 
 module.exports = {

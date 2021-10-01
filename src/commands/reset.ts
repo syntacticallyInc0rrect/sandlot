@@ -11,32 +11,24 @@ import {
 import {MapPoolEmbed} from "../embeds/MapPoolEmbed";
 import {QueueEmbed} from "../embeds/QueueEmbed";
 
-
 const handleResetCommand = async (interaction: CommandInteraction) => {
-    if (!initiated) {
-        await interaction.reply({
-            content: "There is no initiated Pickup Game Bot to be added to. " +
-                "Run the /initiate command if you would like to initiate the Pickup Game Bot.",
-            ephemeral: true,
-            fetchReply: false
-        });
-    } else if (queuedUsers.length < 1) {
-        await interaction.reply({
-            content: "There is no one in the PUG Queue to remove",
-            ephemeral: true,
-            fetchReply: false
-        });
-    } else {
+    const replyContent: string = (!initiated) ?
+        "There is no initiated Pickup Game Bot to be added to. " +
+        "Run the /initiate command if you would like to initiate the Pickup Game Bot." :
+        (queuedUsers.length < 1) ?
+            "There is no one in the PUG Queue to remove" :
+            "The PUG Queue has been reset";
+    if (initiated && queuedUsers.length > 0) {
         wipeQueuedUsers();
         await pugQueueBotMessage.edit({
             embeds: [MapPoolEmbed(), QueueEmbed()]
         });
-        await interaction.reply({
-            content: "The PUG Queue has been reset",
-            ephemeral: true,
-            fetchReply: false
-        });
     }
+    await interaction.reply({
+        content: replyContent,
+        ephemeral: true,
+        fetchReply: false
+    });
 };
 
 module.exports = {
