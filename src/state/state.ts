@@ -174,7 +174,7 @@ export const updateActivePugs = (pug: PickupGame, action: MultiplesAction) => {
 export const movePlayersToVoiceChannel = async (players: (User | PartialUser)[], voiceChannel: VoiceChannel) => {
     if (!guild) throw Error("Your PUG is attempting to kick off in a non-existent Guild.");
     guild.members.cache.forEach(m => {
-        if (m.voice.channel !== null) {
+        if (m.voice.channel) {
             if (players.find(p => p.id === m.user.id)) {
                 m.voice.setChannel(voiceChannel);
             }
@@ -183,11 +183,11 @@ export const movePlayersToVoiceChannel = async (players: (User | PartialUser)[],
 };
 
 export const cancelActivePug = async (activePug: PickupGame) => {
+    await movePlayersToVoiceChannel(activePug.players.map(p => p.user), pugQueueVoiceChannel);
     const channelExists = (channel: Channel) => !!guild.channels.cache.get(channel.id);
     channelExists(activePug.category) && await activePug.category.delete();
     channelExists(activePug.textChannel) && await activePug.textChannel.delete();
     channelExists(activePug.voiceChannel) && await activePug.voiceChannel.delete();
-    await movePlayersToVoiceChannel(activePug.players.map(p => p.user), pugQueueVoiceChannel);
     activePug.redTeamVoiceChannel &&
     channelExists(activePug.redTeamVoiceChannel) &&
     await activePug.redTeamVoiceChannel.delete();

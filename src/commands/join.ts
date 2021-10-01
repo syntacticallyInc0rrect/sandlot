@@ -22,6 +22,7 @@ import {QueueEmbed} from "../embeds/QueueEmbed";
 import {PickupGame} from "../classes/PickupGame";
 import {ReadyCheckEmbed} from "../embeds/ReadyCheckEmbed";
 import {ReadyCheckButtonRow} from "../rows/ReadyCheckButtonRow";
+import {ReadyCheckDM} from "../direct_messages/ReadyCheckDM";
 
 const createNewActivePug = async (interaction: CommandInteraction) => {
     const guild = interaction.guild;
@@ -68,6 +69,7 @@ const createNewActivePug = async (interaction: CommandInteraction) => {
                 ),
                 MultiplesAction.ADD
             );
+            await ReadyCheckDM(players, textChannel);
             await movePlayersToVoiceChannel(players, voiceChannel);
             wipeQueuedUsers();
         });
