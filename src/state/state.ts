@@ -12,6 +12,7 @@ import {
     VoiceChannel
 } from "discord.js";
 import {PickupGame} from "../classes/PickupGame";
+import {MoveUsersToVoiceChannel} from "../helpers/MoveUsersToVoiceChannel";
 
 export enum CommandNameOption {
     'afkImmune' = 'afkImmune',
@@ -120,7 +121,7 @@ export const availableMaps: string[] = [
     "Tideway West"
 ];
 
-export let matchSize: number = 2;
+export let matchSize: number = 4;
 export const updateMatchSize = (newSize: number) => matchSize = newSize;
 
 export const updateAvailableMaps = (map: string, action: MultiplesAction) => {
@@ -171,29 +172,16 @@ export const updateActivePugs = (pug: PickupGame, action: MultiplesAction) => {
     }
 };
 
-export const movePlayersToVoiceChannel = async (players: (User | PartialUser)[], voiceChannel: VoiceChannel) => {
-    if (!guild) throw Error("Your PUG is attempting to kick off in a non-existent Guild.");
-    guild.members.cache.forEach(m => {
-        if (m.voice.channel) {
-            if (players.find(p => p.id === m.user.id)) {
-                m.voice.setChannel(voiceChannel);
-            }
-        }
-    });
-};
-
 export const cancelActivePug = async (activePug: PickupGame) => {
-    await movePlayersToVoiceChannel(activePug.players.map(p => p.user), pugQueueVoiceChannel);
+    await MoveUsersToVoiceChannel(activePug.players.map(p => p.user), pugQueueVoiceChannel);
     const channelExists = (channel: Channel) => !!guild.channels.cache.get(channel.id);
-    channelExists(activePug.category) && await activePug.category.delete();
-    channelExists(activePug.textChannel) && await activePug.textChannel.delete();
-    channelExists(activePug.voiceChannel) && await activePug.voiceChannel.delete();
-    activePug.redTeamVoiceChannel &&
-    channelExists(activePug.redTeamVoiceChannel) &&
-    await activePug.redTeamVoiceChannel.delete();
-    activePug.blueTeamVoiceChannel &&
-    channelExists(activePug.blueTeamVoiceChannel) &&
-    await activePug.blueTeamVoiceChannel.delete();
+    if (channelExists(activePug.category)) await activePug.category.delete();
+    if (channelExists(activePug.textChannel)) await activePug.textChannel.delete();
+    if (channelExists(activePug.voiceChannel)) await activePug.voiceChannel.delete();
+    if (activePug.redTeamVoiceChannel && channelExists(activePug.redTeamVoiceChannel))
+        await activePug.redTeamVoiceChannel.delete();
+    if (activePug.blueTeamVoiceChannel && channelExists(activePug.blueTeamVoiceChannel))
+        await activePug.blueTeamVoiceChannel.delete();
     activePugs.splice(activePugs.indexOf(activePug), 1);
 };
 
