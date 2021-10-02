@@ -6,8 +6,8 @@ export const CancelledReadyCheckDMEmbed = (path: String, username: String): Mess
         thumbnail: {url: "https://cdn.discordapp.com/attachments/444642545650368515/892193157062729738/insurgency-logo-textured-512.png"},
         fields: [
             {
-                name: `Your have been added back to the Pickup Game Queue`,
-                value: `Click [here](${path}) to be taken back to the Pickup Game Queue :)`,
+                name: `Your Ready Check was cancelled and you have been added back to the Pickup Game Queue`,
+                value: `Click [here](${path}) to be taken back to PUG Queue :)`,
                 inline: false
             },
         ],
