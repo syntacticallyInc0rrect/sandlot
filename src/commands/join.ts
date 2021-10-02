@@ -24,7 +24,6 @@ import {ReadyCheckButtonRow} from "../rows/ReadyCheckButtonRow";
 import {SendReadyCheckDirectMessages} from "../direct_messages/SendReadyCheckDirectMessages";
 import {MoveUsersToVoiceChannel} from "../helpers/MoveUsersToVoiceChannel";
 import {GetRoles} from "../helpers/GetRoles";
-import {ReadyCheckDMEmbed} from "../embeds/ReadyCheckDMEmbed";
 
 const createNewActivePug = async (interaction: CommandInteraction) => {
     const guild = interaction.guild;

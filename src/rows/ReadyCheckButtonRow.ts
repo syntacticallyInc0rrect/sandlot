@@ -4,7 +4,7 @@ import {ButtonCustomIdOption, ButtonRowProps} from "../state/state";
 export const ReadyCheckButtonRow = (): MessageActionRow => {
     const props: ButtonRowProps[] = [
         {customId: ButtonCustomIdOption.ready.valueOf(), label: 'Ready', style: 'SUCCESS', emoji: '✔'},
-        {customId: ButtonCustomIdOption.not_ready.valueOf(), label: 'Cancel', style: 'DANGER', emoji: '✖'},
+        {customId: ButtonCustomIdOption.not_ready.valueOf(), label: 'Not Ready', style: 'DANGER', emoji: '✖'},
     ];
     return new MessageActionRow()
         .addComponents(props

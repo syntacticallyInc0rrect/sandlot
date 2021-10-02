@@ -175,7 +175,7 @@ export const updateActivePugs = (pug: PickupGame, action: MultiplesAction) => {
 export const cancelActivePug = async (activePug: PickupGame) => {
     await MoveUsersToVoiceChannel(activePug.players.map(p => p.user), pugQueueVoiceChannel);
     const channelExists = (channel: Channel) => !!guild.channels.cache.get(channel.id);
-    if (channelExists(activePug.category)) await activePug.category.delete();
+    if (channelExists(activePug.category))await activePug.category.delete();
     if (channelExists(activePug.textChannel)) await activePug.textChannel.delete();
     if (channelExists(activePug.voiceChannel)) await activePug.voiceChannel.delete();
     if (activePug.redTeamVoiceChannel && channelExists(activePug.redTeamVoiceChannel))

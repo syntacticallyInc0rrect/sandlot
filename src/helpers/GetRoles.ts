@@ -3,7 +3,7 @@ import {adminRoleName} from "../secrets/config.json";
 
 export const GetRoles = (guild: Guild): OverwriteResolvable[] => {
         const everyoneRole: Role | undefined = guild.roles.cache.find(r => r.name === '@everyone');
-        const adminRole: Role | undefined = guild.roles.cache.find(r => r.name === adminRoleName);
+        const adminRole: Role | undefined = guild.roles.cache.find(r => r.name.toLowerCase() === adminRoleName);
         if (!everyoneRole) throw Error("This Guild does not contain an @everyone role.");
         if (!adminRole) throw Error("You must configure an adminRoleName in the secrets/config.json " +
             "and that role must exist in your Guild.");
