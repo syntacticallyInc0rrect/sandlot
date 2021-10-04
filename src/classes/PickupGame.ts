@@ -35,7 +35,7 @@ export class PickupGame {
         this._textChannel = textChannel;
         this._voiceChannel = voiceChannel;
         this._message = message;
-        this._countdown = 4;
+        this._countdown = 24;
         this.readyCheckTimer();
     }
 
