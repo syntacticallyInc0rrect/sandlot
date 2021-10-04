@@ -29,7 +29,7 @@ const handleCancelCommand = async (interaction: CommandInteraction) => {
         } else {
             await cancelActivePug(activePug);
             await interaction.reply({
-                content: "The PUG Queue has been reset",
+                content: "The Pickup Game was cancelled.",
                 ephemeral: true,
                 fetchReply: false
             });

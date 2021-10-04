@@ -1,11 +1,13 @@
 import {SlashCommandBuilder} from '@discordjs/builders';
-import {CommandInteraction, Guild, GuildMember, PartialUser, User} from "discord.js";
+import {CommandInteraction, Guild, GuildMember} from "discord.js";
 import {
     activePugs,
     cancelActivePug,
     CommandDescOption,
-    CommandNameOption, guild,
-    initiated, pugQueueBotMessage, pugQueueBotTextChannel,
+    CommandNameOption,
+    initiated,
+    pugQueueBotMessage,
+    pugQueueBotTextChannel,
     queuedUsers
 } from "../state/state";
 import {PickupGame} from "../classes/PickupGame";

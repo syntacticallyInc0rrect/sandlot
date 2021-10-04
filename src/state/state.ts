@@ -121,7 +121,7 @@ export const availableMaps: string[] = [
     "Tideway West"
 ];
 
-export let matchSize: number = 10;
+export let matchSize: number = 2;
 export const updateMatchSize = (newSize: number) => matchSize = newSize;
 
 export const updateAvailableMaps = (map: string, action: MultiplesAction) => {
@@ -210,4 +210,11 @@ export const assignRandomTeams = (pug: PickupGame) => {
         players.splice(players.indexOf(randomPlayer), 1);
     }
     pug.blueTeam = [...players];
-}
+};
+
+export const thumbnailUrl =
+    "https://cdn.discordapp.com/attachments/444642545650368515/892193157062729738/insurgency-logo-textured-512.png";
+
+export const authorIconUrl =
+    "https://images-ext-1.discordapp.net/external/ZUgVOtxXsm71dQ6V7hxBhuIBp4z7-7mWRj3UNiTPPA0/https/i.imgur.com/h2xgWfa.png?width=681&height=676"
+

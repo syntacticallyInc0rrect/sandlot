@@ -16,8 +16,8 @@ const handleResetCommand = async (interaction: CommandInteraction) => {
         "There is no initiated Pickup Game Bot to be added to. " +
         "Run the /initiate command if you would like to initiate the Pickup Game Bot." :
         (queuedUsers.length < 1) ?
-            "There is no one in the PUG Queue to remove" :
-            "The PUG Queue has been reset";
+            "There is no one in the Pickup Game Queue to remove" :
+            "The Pickup Game Queue has been reset";
     if (initiated && queuedUsers.length > 0) {
         wipeQueuedUsers();
         await pugQueueBotMessage.edit({

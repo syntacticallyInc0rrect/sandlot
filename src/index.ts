@@ -1,10 +1,4 @@
-import {
-    Collection,
-    Intents,
-    Interaction,
-    MessageReaction,
-    PartialMessageReaction,
-} from "discord.js";
+import {Collection, Intents, Interaction, MessageReaction, PartialMessageReaction,} from "discord.js";
 import {guildId, token} from "./secrets/config.json";
 import * as fs from "fs";
 import {ButtonCustomIdOption, CommandNameOption, updateClient, updateGuild} from "./state/state";
