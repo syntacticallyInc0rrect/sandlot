@@ -1,11 +1,13 @@
-import {bold, SlashCommandBuilder} from '@discordjs/builders';
+import {bold, codeBlock, SlashCommandBuilder} from '@discordjs/builders';
 import {CommandInteraction} from "discord.js";
 import {
     CommandDescOption,
     CommandNameOption,
     initiated,
+    pugAuditTextChannel,
     pugQueueBotTextChannel,
     updateInitiate,
+    updatePugAuditTextChannel,
     updatePugQueueBotMessage,
     updatePugQueueBotTextChannel,
     updatePugQueueCategory,
@@ -16,7 +18,8 @@ import {
 import {InitialButtonRow} from "../rows/InitialButtonRow";
 import {MapPoolEmbed} from "../embeds/MapPoolEmbed";
 import {QueueEmbed} from "../embeds/QueueEmbed";
-import {GetRoles} from "../helpers/GetRoles";
+import {GetPugPermissions} from "../helpers/GetPugPermissions";
+import {GetAdminPermissions} from "../helpers/GetAdminPermissions";
 
 const createPickupGameChannels = async (interaction: CommandInteraction) => {
     const guild = interaction.guild;
@@ -27,7 +30,7 @@ const createPickupGameChannels = async (interaction: CommandInteraction) => {
             await guild.channels.create("pug-bot", {
                 parent: category,
                 type: "GUILD_TEXT",
-                permissionOverwrites: GetRoles(guild)
+                permissionOverwrites: GetPugPermissions(guild)
             }).then(async bc => {
                 updatePugQueueBotTextChannel(bc);
                 updateSuggestedMap();
@@ -36,6 +39,17 @@ const createPickupGameChannels = async (interaction: CommandInteraction) => {
                     embeds: [MapPoolEmbed(), QueueEmbed()],
                     components: [InitialButtonRow()]
                 }).then(m => updatePugQueueBotMessage(m));
+            });
+            await guild.channels.create("pug-audit", {
+                parent: category,
+                type: "GUILD_TEXT",
+                permissionOverwrites: GetAdminPermissions(guild)
+            }).then(m => {
+                updatePugAuditTextChannel(m);
+                pugAuditTextChannel.send({
+                    content: codeBlock(`( ${new Date()} )\n
+                    Bot initialized by ${interaction.user.username}`)
+                });
             });
             await guild.channels.create("text-chat", {
                 parent: category,

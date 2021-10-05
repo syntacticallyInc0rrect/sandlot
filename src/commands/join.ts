@@ -24,7 +24,7 @@ import {ReadyCheckEmbed} from "../embeds/ReadyCheckEmbed";
 import {ReadyCheckButtonRow} from "../rows/ReadyCheckButtonRow";
 import {SendReadyCheckDirectMessages} from "../direct_messages/SendReadyCheckDirectMessages";
 import {MoveUsersToVoiceChannel} from "../helpers/MoveUsersToVoiceChannel";
-import {GetRoles} from "../helpers/GetRoles";
+import {GetPugPermissions} from "../helpers/GetPugPermissions";
 
 const createNewActivePug = async (interaction: CommandInteraction) => {
     const guild = interaction.guild;
@@ -44,7 +44,7 @@ const createNewActivePug = async (interaction: CommandInteraction) => {
             await guild.channels.create("ready-check", {
                 parent: category,
                 type: "GUILD_TEXT",
-                permissionOverwrites: GetRoles(guild)
+                permissionOverwrites: GetPugPermissions(guild)
             }).then(async tc => {
                 textChannel = tc;
                 await textChannel.send({

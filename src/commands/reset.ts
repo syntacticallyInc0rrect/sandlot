@@ -1,9 +1,10 @@
-import {SlashCommandBuilder} from "@discordjs/builders";
+import {codeBlock, SlashCommandBuilder} from "@discordjs/builders";
 import {CommandInteraction} from "discord.js";
 import {
     CommandDescOption,
     CommandNameOption,
     initiated,
+    pugAuditTextChannel,
     pugQueueBotMessage,
     queuedUsers,
     wipeQueuedUsers
@@ -22,7 +23,10 @@ const handleResetCommand = async (interaction: CommandInteraction) => {
         wipeQueuedUsers();
         await pugQueueBotMessage.edit({
             embeds: [MapPoolEmbed(), QueueEmbed()]
-        });
+        }).then(() => pugAuditTextChannel.send({
+            content: codeBlock( `( ${new Date()} )\n
+            Queue reset by ${interaction.user.username}`)
+        }));
     }
     await interaction.reply({
         content: replyContent,

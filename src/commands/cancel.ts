@@ -1,5 +1,12 @@
-import {SlashCommandBuilder} from "@discordjs/builders";
-import {activePugs, cancelActivePug, CommandDescOption, CommandNameOption, initiated,} from "../state/state";
+import {codeBlock, SlashCommandBuilder} from "@discordjs/builders";
+import {
+    activePugs,
+    cancelActivePug,
+    CommandDescOption,
+    CommandNameOption,
+    initiated,
+    pugAuditTextChannel,
+} from "../state/state";
 import {CommandInteraction} from "discord.js";
 import {PickupGame} from "../classes/PickupGame";
 
@@ -27,7 +34,10 @@ const handleCancelCommand = async (interaction: CommandInteraction) => {
                 fetchReply: false
             });
         } else {
-            await cancelActivePug(activePug);
+            await cancelActivePug(activePug).then(() => pugAuditTextChannel.send({
+                content: codeBlock(`( ${new Date()} )\n
+                    Pickup Game #${activePug.id} was cancelled by ${interaction.user.username}`)
+            }));
             await interaction.reply({
                 content: "The Pickup Game was cancelled.",
                 ephemeral: true,

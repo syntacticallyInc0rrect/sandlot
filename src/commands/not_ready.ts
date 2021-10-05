@@ -1,4 +1,4 @@
-import {SlashCommandBuilder} from '@discordjs/builders';
+import {codeBlock, SlashCommandBuilder} from '@discordjs/builders';
 import {CommandInteraction, Guild, GuildMember} from "discord.js";
 import {
     activePugs,
@@ -6,6 +6,7 @@ import {
     CommandDescOption,
     CommandNameOption,
     initiated,
+    pugAuditTextChannel,
     pugQueueBotMessage,
     pugQueueBotTextChannel,
     queuedUsers
@@ -56,7 +57,10 @@ const handleNotReadyCommand = async (interaction: CommandInteraction) => {
             await cancelActivePug(activePug);
             await pugQueueBotMessage.edit({
                 embeds: [MapPoolEmbed(), QueueEmbed()]
-            });
+            }).then(() => pugAuditTextChannel.send({
+                content: codeBlock(`( ${new Date()} )
+                \nReady Check cancelled by ${interaction.user.username}`)
+            }));
         }
     }
     await interaction.reply({
