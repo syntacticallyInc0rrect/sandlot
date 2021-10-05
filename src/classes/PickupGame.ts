@@ -120,7 +120,7 @@ export class PickupGame {
         const countdownIteration = 5000/*every 5 seconds*/;
         setTimeout(async () => {
             if (!activePugs.find(ap => ap === this) || !this._players.find(p => !p.isReady)) {
-                this._countdown = ((readyCheckTime * 1000) / countdownIteration);
+                this._countdown = readyCheckTime;
                 return;
             }
             if (this._countdown < 1 && !!this._players.find(p => !p.isReady)) {
@@ -166,7 +166,7 @@ export class PickupGame {
             await this.message.edit({
                 embeds: [ReadyCheckEmbed(this.players, this._countdown)]
             });
-            this._countdown -= 1;
+            this._countdown -= (countdownIteration / 1000);
             this.readyCheckTimer();
         }, (countdownIteration));
     }
