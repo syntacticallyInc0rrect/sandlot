@@ -119,7 +119,7 @@ export class PickupGame {
     readyCheckTimer() {
         const countdownIteration = 5000/*every 5 seconds*/;
         setTimeout(async () => {
-            if (!activePugs.find(ap => ap === this) || !!this._redTeamVoiceChannel) {
+            if (!activePugs.find(ap => ap === this) || !this._players.find(p => !p.isReady)) {
                 this._countdown = ((readyCheckTime * 1000) / countdownIteration);
                 return;
             }
@@ -152,7 +152,7 @@ export class PickupGame {
                         queuedUsers.splice(queuedUsers.indexOf(queuedUser), 1);
                         if (i === (matchSize - 1)) {
                             await this.message.edit({
-                                embeds: [ReadyCheckEmbed(this.players, (this._countdown * 5))]
+                                embeds: [ReadyCheckEmbed(this.players, this._countdown)]
                             });
                             await pugQueueBotMessage.edit({
                                 embeds: [MapPoolEmbed(), QueueEmbed()]
@@ -161,7 +161,11 @@ export class PickupGame {
                     }
                 }
                 this._countdown = ((readyCheckTime * 1000) / countdownIteration);
+                return;
             }
+            await this.message.edit({
+                embeds: [ReadyCheckEmbed(this.players, this._countdown)]
+            });
             this._countdown -= 1;
             this.readyCheckTimer();
         }, (countdownIteration));

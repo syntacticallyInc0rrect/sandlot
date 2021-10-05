@@ -9,6 +9,9 @@ export const SendFailedReadyCheckDirectMessages = async (
 ) => {
     const channelFullPath: String =
         `https://discord.com/channels/${guild.id}/${channel.id}`;
-    users.map(async u => await u.send({embeds: [FailedReadyCheckDMEmbed(channelFullPath, usernames)]}));
+    users.map(
+        async u => await u.send({embeds: [FailedReadyCheckDMEmbed(channelFullPath, usernames)]})
+            .catch(() => console.log(`Unable to send Failed Ready Check DM to ${u.username}`))
+    );
 
 };
