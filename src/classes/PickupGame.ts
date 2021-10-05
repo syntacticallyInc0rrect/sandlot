@@ -119,8 +119,8 @@ export class PickupGame {
     readyCheckTimer() {
         const countdownIteration = 5000/*every 5 seconds*/;
         setTimeout(async () => {
-            if (!activePugs.find(ap => ap === this) || !!this._redTeamVoiceChannel) {
-                this._countdown = ((readyCheckTime * 1000) / countdownIteration);
+            if (!activePugs.find(ap => ap === this) || !this._players.find(p => !p.isReady)) {
+                this._countdown = readyCheckTime;
                 return;
             }
             if (this._countdown < 1 && !!this._players.find(p => !p.isReady)) {
@@ -161,11 +161,12 @@ export class PickupGame {
                     }
                 }
                 this._countdown = ((readyCheckTime * 1000) / countdownIteration);
+                return;
             }
             await this.message.edit({
                 embeds: [ReadyCheckEmbed(this.players, this._countdown)]
             });
-            this._countdown -= 1;
+            this._countdown -= (countdownIteration / 1000);
             this.readyCheckTimer();
         }, (countdownIteration));
     }
