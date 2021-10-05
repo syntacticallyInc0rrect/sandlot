@@ -35,8 +35,7 @@ const handleEndCommand = async (interaction: CommandInteraction) => {
             });
         } else {
             await cancelActivePug(activePug).then(() => pugAuditTextChannel.send({
-                content: codeBlock(`( ${new Date()} )\n
-                    Pickup Game #${activePug.id} was ended by ${interaction.user.username}`)
+                content: codeBlock(`Pickup Game #${activePug.id} was ended by ${interaction.user.username}`)
             }));
             await interaction.reply({
                 content: "You have ended your Pickup Game.",

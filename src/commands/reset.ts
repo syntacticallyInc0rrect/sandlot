@@ -24,8 +24,7 @@ const handleResetCommand = async (interaction: CommandInteraction) => {
         await pugQueueBotMessage.edit({
             embeds: [MapPoolEmbed(), QueueEmbed()]
         }).then(() => pugAuditTextChannel.send({
-            content: codeBlock( `( ${new Date()} )\n
-            Queue reset by ${interaction.user.username}`)
+            content: codeBlock( `Queue reset by ${interaction.user.username}`)
         }));
     }
     await interaction.reply({

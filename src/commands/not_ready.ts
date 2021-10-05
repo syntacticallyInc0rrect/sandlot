@@ -58,8 +58,7 @@ const handleNotReadyCommand = async (interaction: CommandInteraction) => {
             await pugQueueBotMessage.edit({
                 embeds: [MapPoolEmbed(), QueueEmbed()]
             }).then(() => pugAuditTextChannel.send({
-                content: codeBlock(`( ${new Date()} )
-                \nReady Check cancelled by ${interaction.user.username}`)
+                content: codeBlock(`Ready Check cancelled by ${interaction.user.username}`)
             }));
         }
     }

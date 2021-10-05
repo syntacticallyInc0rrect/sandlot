@@ -47,8 +47,7 @@ const createPickupGameChannels = async (interaction: CommandInteraction) => {
             }).then(m => {
                 updatePugAuditTextChannel(m);
                 pugAuditTextChannel.send({
-                    content: codeBlock(`( ${new Date()} )\n
-                    Bot initialized by ${interaction.user.username}`)
+                    content: codeBlock(`Bot initialized by ${interaction.user.username}`)
                 });
             });
             await guild.channels.create("text-chat", {
