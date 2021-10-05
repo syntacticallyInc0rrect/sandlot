@@ -31,7 +31,7 @@ const handleReadyCommand = async (interaction: CommandInteraction) => {
         maybePugPlayer.isReady = true;
         if (!!activePug.players.find(p => !p.isReady)) {
             await activePug.message.edit({
-                embeds: [ReadyCheckEmbed(activePug.players, (activePug.countdown * 5))]
+                embeds: [ReadyCheckEmbed(activePug.players, activePug.countdown)]
             });
         } else {
             assignRandomTeams(activePug);
@@ -69,6 +69,6 @@ module.exports = {
         .setName(CommandNameOption.ready)
         .setDescription(CommandDescOption.ready),
     async execute(interaction: CommandInteraction) {
-        await handleReadyCommand(interaction);
+        await handleReadyCommand(interaction).catch(e => console.log(e));
     },
 };

@@ -71,6 +71,6 @@ module.exports = {
         .setDescription(CommandDescOption.initiate.valueOf())
         .setDefaultPermission(false),
     async execute(interaction: CommandInteraction) {
-        await handleInitiateCommand(interaction);
+        await handleInitiateCommand(interaction).catch(e => console.log(e));
     }
 };

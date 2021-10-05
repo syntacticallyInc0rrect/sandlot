@@ -36,7 +36,7 @@ const handleNotReadyCommand = async (interaction: CommandInteraction) => {
             await SendReadyCheckDirectMessages([queuedUsers[0]], activePug.textChannel);
             queuedUsers.splice(0, 1);
             await activePug.message.edit({
-                embeds: [ReadyCheckEmbed(activePug.players, (activePug.countdown * 5))]
+                embeds: [ReadyCheckEmbed(activePug.players, activePug.countdown)]
             });
             await pugQueueBotMessage.edit({
                 embeds: [MapPoolEmbed(), QueueEmbed()]
@@ -71,6 +71,6 @@ module.exports = {
         .setName(CommandNameOption.not_ready)
         .setDescription(CommandDescOption.not_ready),
     async execute(interaction: CommandInteraction) {
-        await handleNotReadyCommand(interaction);
+        await handleNotReadyCommand(interaction).catch(e => console.log(e));
     },
 };

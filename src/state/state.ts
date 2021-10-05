@@ -121,7 +121,8 @@ export const availableMaps: string[] = [
     "Tideway West"
 ];
 
-export let matchSize: number = 10;
+// export let matchSize: number = 10;
+export let matchSize: number = 2;
 export const updateMatchSize = (newSize: number) => matchSize = newSize;
 
 export const updateAvailableMaps = (map: string, action: MultiplesAction) => {
@@ -173,15 +174,15 @@ export const updateActivePugs = (pug: PickupGame, action: MultiplesAction) => {
 };
 
 export const cancelActivePug = async (activePug: PickupGame) => {
-    await MoveUsersToVoiceChannel(activePug.players.map(p => p.user), pugQueueVoiceChannel);
+    await MoveUsersToVoiceChannel(activePug.players.map(p => p.user), pugQueueVoiceChannel).catch();
     const channelExists = (channel: Channel) => !!guild.channels.cache.get(channel.id);
-    if (channelExists(activePug.category)) await activePug.category.delete();
-    if (channelExists(activePug.textChannel)) await activePug.textChannel.delete();
-    if (channelExists(activePug.voiceChannel)) await activePug.voiceChannel.delete();
+    if (channelExists(activePug.category)) await activePug.category.delete().catch();
+    if (channelExists(activePug.textChannel)) await activePug.textChannel.delete().catch();
+    if (channelExists(activePug.voiceChannel)) await activePug.voiceChannel.delete().catch();
     if (activePug.redTeamVoiceChannel && channelExists(activePug.redTeamVoiceChannel))
-        await activePug.redTeamVoiceChannel.delete();
+        await activePug.redTeamVoiceChannel.delete().catch();
     if (activePug.blueTeamVoiceChannel && channelExists(activePug.blueTeamVoiceChannel))
-        await activePug.blueTeamVoiceChannel.delete();
+        await activePug.blueTeamVoiceChannel.delete().catch();
     activePugs.splice(activePugs.indexOf(activePug), 1);
 };
 

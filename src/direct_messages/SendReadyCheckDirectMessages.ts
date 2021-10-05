@@ -5,6 +5,11 @@ import {guild} from "../state/state";
 export const SendReadyCheckDirectMessages = async (users: (User | PartialUser)[], channel: TextChannel) => {
     const channelFullPath: String =
         `https://discord.com/channels/${guild.id}/${channel.id}`;
-    users.map(async u => await u.send({embeds: [ReadyCheckDMEmbed(channelFullPath)]}));
+    await Promise.all(
+        users.map(async u => await u.send({embeds: [ReadyCheckDMEmbed(channelFullPath)]})
+            .catch()
+            .then(() => Promise.resolve())
+        )
+    ).catch().then(() => Promise.resolve());
 
 };

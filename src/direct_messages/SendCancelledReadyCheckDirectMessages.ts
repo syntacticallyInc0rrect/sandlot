@@ -9,6 +9,11 @@ export const SendCancelledReadyCheckDirectMessages = async (
 ) => {
     const channelFullPath: String =
         `https://discord.com/channels/${guild.id}/${channel.id}`;
-    users.map(async u => await u.send({embeds: [CancelledReadyCheckDMEmbed(channelFullPath, username)]}));
+    await Promise.all(
+        users.map(async u => await u.send({embeds: [CancelledReadyCheckDMEmbed(channelFullPath, username)]})
+            .catch()
+            .then(() => Promise.resolve())
+        )
+    ).catch().then(() => Promise.resolve());
 
 };

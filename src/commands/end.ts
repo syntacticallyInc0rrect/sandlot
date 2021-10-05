@@ -40,10 +40,8 @@ const handleEndCommand = async (interaction: CommandInteraction) => {
 module.exports = {
     data: new SlashCommandBuilder()
         .setName(CommandNameOption.end.valueOf())
-        .setDescription(CommandDescOption.end.valueOf())
-        .setDefaultPermission(false)
-    ,
+        .setDescription(CommandDescOption.end.valueOf()),
     async execute(interaction: CommandInteraction) {
-        await handleEndCommand(interaction);
+        await handleEndCommand(interaction).catch(e => console.log(e));
     },
 };

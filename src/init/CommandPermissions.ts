@@ -19,11 +19,11 @@ export const CommandPermissions = async () => {
         }
     ];
     const commandsList = await guild.commands.fetch();
-    await commandsList.forEach(c => {
+    await Promise.all(commandsList.map(c => {
         guild.commands.permissions.add({
             command: c.id,
             permissions: permissions
         })
-    })
+    })).catch(e => console.log(e)).then(() => Promise.resolve());
     console.log('Updated permissions for all application commands.');
 };

@@ -41,9 +41,8 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName(CommandNameOption.cancel)
         .setDescription(CommandDescOption.cancel)
-        .setDefaultPermission(false)
-    ,
+        .setDefaultPermission(false),
     async execute(interaction: CommandInteraction) {
-        await handleCancelCommand(interaction);
+        await handleCancelCommand(interaction).catch(e => console.log(e));
     },
 };
