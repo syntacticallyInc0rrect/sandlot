@@ -20,10 +20,10 @@ const handleReadyCommand = async (interaction: CommandInteraction) => {
         "There is no initiated Pickup Game Bot for you to Ready-Up to. " +
         "Run the /initiate command if you would like to initiate the Pickup Game Bot." :
         (!activePug) ? "You are not in an active Pickup Game to Ready-Up to." :
-            (!!activePug.redTeamVoiceChannel) ?
+            (activePug.pastReadyCheck()) ?
                 "Your Pickup Game is already passed the Ready Check phase." :
                 "You are now Ready for your Pickup Game!";
-    if (initiated && !!activePug && !activePug.redTeamVoiceChannel) {
+    if (initiated && !!activePug && !activePug.pastReadyCheck()) {
         const maybePugPlayer: ReadyCheckPlayer | undefined = activePug.players.find(p => p.user === interaction.user);
         if (!maybePugPlayer) throw Error(
             "Somehow the interaction user is not found in the Pickup Game players when they were expected to be."
@@ -49,6 +49,7 @@ const handleReadyCommand = async (interaction: CommandInteraction) => {
                 activePug.blueTeamVoiceChannel = btvc;
                 await MoveUsersToVoiceChannel(activePug.blueTeam, btvc);
             });
+            await activePug.textChannel.edit({name: `pug-${activePug.id}`})
             await activePug.message.edit({
                 content: "/----- 𝙂𝙖𝙢𝙚 𝙏𝙞𝙢𝙚! -----/",
                 embeds: [PickupGameEmbed(activePug)],

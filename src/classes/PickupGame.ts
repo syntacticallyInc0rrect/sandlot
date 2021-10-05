@@ -116,14 +116,18 @@ export class PickupGame {
         return this._message;
     }
 
+    pastReadyCheck(): boolean {
+        return !this._players.find(p => !p.isReady);
+    }
+
     readyCheckTimer() {
         const countdownIteration = 5000/*every 5 seconds*/;
         setTimeout(async () => {
-            if (!activePugs.find(ap => ap === this) || !this._players.find(p => !p.isReady)) {
+            if (!activePugs.find(ap => ap === this) || this.pastReadyCheck()) {
                 this._countdown = readyCheckTime;
                 return;
             }
-            if (this._countdown < 1 && !!this._players.find(p => !p.isReady)) {
+            if (this._countdown < 1 && !this.pastReadyCheck()) {
                 let readyPlayers = this._players.filter(p => p.isReady);
                 if (queuedUsers.length + (matchSize - readyPlayers.length) < matchSize) {
                     readyPlayers.forEach(rp => queuedUsers.push(rp.user));
