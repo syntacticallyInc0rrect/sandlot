@@ -44,6 +44,7 @@ export enum CommandDescOption {
 
 export enum ButtonCustomIdOption {
     'afkImmune' = 'afkImmune',
+    'end' = 'end',
     'not_ready' = 'not_ready',
     'join' = `joinQueue`,
     'leave' = 'leaveQueue',

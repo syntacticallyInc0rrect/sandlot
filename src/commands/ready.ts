@@ -13,6 +13,7 @@ import {PickupGame} from "../classes/PickupGame";
 import {ReadyCheckEmbed} from "../embeds/ReadyCheckEmbed";
 import {PickupGameEmbed} from "../embeds/PickupGameEmbed";
 import {MoveUsersToVoiceChannel} from "../helpers/MoveUsersToVoiceChannel";
+import {EndPugButtonRow} from "../rows/EndPugButtonRow";
 
 const handleReadyCommand = async (interaction: CommandInteraction) => {
     const activePug: PickupGame | undefined = activePugs.find(ap => ap.players.find(p => p.user === interaction.user));
@@ -53,7 +54,7 @@ const handleReadyCommand = async (interaction: CommandInteraction) => {
             await activePug.message.edit({
                 content: "/----- 𝙂𝙖𝙢𝙚 𝙏𝙞𝙢𝙚! -----/",
                 embeds: [PickupGameEmbed(activePug)],
-                components: []
+                components: [EndPugButtonRow()]
             });
             await activePug.voiceChannel.delete();
         }

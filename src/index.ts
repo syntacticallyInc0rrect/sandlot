@@ -4,6 +4,7 @@ import * as fs from "fs";
 import {ButtonCustomIdOption, CommandNameOption, updateClient, updateGuild} from "./state/state";
 import {DeployCommands} from "./init/DeployCommands";
 import {CommandPermissions} from "./init/CommandPermissions";
+import {EndPugSelectRow} from "./rows/EndPugSelectRow";
 
 const {Client} = require('discord.js');
 const client = new Client({intents: [Intents.FLAGS.GUILDS]});
@@ -52,9 +53,24 @@ client.on('interactionCreate', async (interaction: Interaction) => {
             case ButtonCustomIdOption.not_ready.valueOf():
                 await client.commands.get(CommandNameOption.not_ready.valueOf()).execute(interaction);
                 break;
+            case ButtonCustomIdOption.end.valueOf():
+                await interaction.reply({
+                    content: 'Are you sure you want to end the Pickup Game? ' +
+                        'This will be logged for Administrators to audit.',
+                    components: [EndPugSelectRow()],
+                    ephemeral: true
+                });
+                break;
             default:
                 return;
         }
+    } else if (interaction.isSelectMenu()) {
+        if (interaction.customId === ButtonCustomIdOption.end.valueOf()) {
+            if (interaction.values[0] === 'end_pug')
+                await client.commands.get(CommandNameOption.end.valueOf()).execute(interaction);
+            else await interaction.reply({content: 'Your command was cancelled.', ephemeral: true});
+        }
+        return;
     } else {
         return;
     }
