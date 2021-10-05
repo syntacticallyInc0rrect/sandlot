@@ -69,6 +69,6 @@ module.exports = {
         .setName(CommandNameOption.ready)
         .setDescription(CommandDescOption.ready),
     async execute(interaction: CommandInteraction) {
-        await handleReadyCommand(interaction);
+        await handleReadyCommand(interaction).catch(e => console.log(e));
     },
 };

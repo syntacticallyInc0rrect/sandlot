@@ -109,6 +109,6 @@ module.exports = {
         .setName(CommandNameOption.join.valueOf())
         .setDescription(CommandDescOption.join.valueOf()),
     async execute(interaction: CommandInteraction) {
-        await handleJoinCommand(interaction);
+        await handleJoinCommand(interaction).catch(e => console.log(e));
     },
 };

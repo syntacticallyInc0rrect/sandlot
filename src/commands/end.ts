@@ -44,6 +44,6 @@ module.exports = {
         .setDefaultPermission(false)
     ,
     async execute(interaction: CommandInteraction) {
-        await handleEndCommand(interaction);
+        await handleEndCommand(interaction).catch(e => console.log(e));
     },
 };

@@ -71,6 +71,6 @@ module.exports = {
         .setName(CommandNameOption.not_ready)
         .setDescription(CommandDescOption.not_ready),
     async execute(interaction: CommandInteraction) {
-        await handleNotReadyCommand(interaction);
+        await handleNotReadyCommand(interaction).catch(e => console.log(e));
     },
 };

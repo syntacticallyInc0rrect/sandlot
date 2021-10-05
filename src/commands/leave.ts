@@ -37,6 +37,6 @@ module.exports = {
         .setName(CommandNameOption.leave.valueOf())
         .setDescription(CommandDescOption.leave.valueOf()),
     async execute(interaction: CommandInteraction) {
-        await handleLeaveCommand(interaction);
+        await handleLeaveCommand(interaction).catch(e => console.log(e));
     },
 };

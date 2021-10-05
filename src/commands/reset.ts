@@ -37,6 +37,6 @@ module.exports = {
         .setDescription(CommandDescOption.reset)
         .setDefaultPermission(false),
     async execute(interaction: CommandInteraction) {
-        await handleResetCommand(interaction);
+        await handleResetCommand(interaction).catch(e => console.log(e));
     },
 };
