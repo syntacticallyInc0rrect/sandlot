@@ -124,8 +124,8 @@ export const availableMaps: string[] = [
     "Tideway West"
 ];
 
-// export let matchSize: number = 10;
-export let matchSize: number = 2;
+export let matchSize: number = 10;
+// export let matchSize: number = 2;
 export const updateMatchSize = (newSize: number) => matchSize = newSize;
 
 export const updateAvailableMaps = (map: string, action: MultiplesAction) => {

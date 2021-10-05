@@ -40,7 +40,7 @@ const createPickupGameChannels = async (interaction: CommandInteraction) => {
                     components: [InitialButtonRow()]
                 }).then(m => updatePugQueueBotMessage(m));
             });
-            await guild.channels.create("pug-audit", {
+            await guild.channels.create("pug-audit-log", {
                 parent: category,
                 type: "GUILD_TEXT",
                 permissionOverwrites: GetAdminPermissions(guild)
