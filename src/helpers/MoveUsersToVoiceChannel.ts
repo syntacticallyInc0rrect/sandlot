@@ -13,6 +13,8 @@ export const MoveUsersToVoiceChannel = async (
         if (!users.find(u => u.id === member.user.id)) return Promise.resolve();
         console.log(`Should have moved ${member.user.username}`)
         await member.voice.setChannel(voiceChannel).catch(e => console.log(e));
-    })).then(() => {return Promise.resolve();});
+    })).then(() => {
+        return Promise.resolve();
+    });
     console.log(`Should be here after moving all: ${users.map(u => u.username).toString()}`)
 };

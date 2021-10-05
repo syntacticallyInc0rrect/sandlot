@@ -175,7 +175,7 @@ export const updateActivePugs = (pug: PickupGame, action: MultiplesAction) => {
 export const cancelActivePug = async (activePug: PickupGame) => {
     await MoveUsersToVoiceChannel(activePug.players.map(p => p.user), pugQueueVoiceChannel);
     const channelExists = (channel: Channel) => !!guild.channels.cache.get(channel.id);
-    if (channelExists(activePug.category))await activePug.category.delete();
+    if (channelExists(activePug.category)) await activePug.category.delete();
     if (channelExists(activePug.textChannel)) await activePug.textChannel.delete();
     if (channelExists(activePug.voiceChannel)) await activePug.voiceChannel.delete();
     if (activePug.redTeamVoiceChannel && channelExists(activePug.redTeamVoiceChannel))
@@ -218,3 +218,4 @@ export const thumbnailUrl =
 export const authorIconUrl =
     "https://images-ext-1.discordapp.net/external/ZUgVOtxXsm71dQ6V7hxBhuIBp4z7-7mWRj3UNiTPPA0/https/i.imgur.com/h2xgWfa.png?width=681&height=676"
 
+export const readyCheckTime = 150;/*number of seconds*/

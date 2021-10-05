@@ -3,9 +3,10 @@ import {memberNicknameMention} from "@discordjs/builders";
 import {authorIconUrl, ReadyCheckPlayer, thumbnailUrl} from "../state/state";
 
 
-export const ReadyCheckEmbed = (players: ReadyCheckPlayer[]): MessageEmbed => {
+export const ReadyCheckEmbed = (players: ReadyCheckPlayer[], countdown: number): MessageEmbed => {
     const props: MessageEmbedOptions = {
         title: `Ready Check!`,
+        description: `${countdown}s remaining`,
         thumbnail: {url: thumbnailUrl},
         fields: [
             {

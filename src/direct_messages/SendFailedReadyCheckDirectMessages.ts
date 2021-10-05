@@ -8,7 +8,7 @@ export const SendFailedReadyCheckDirectMessages = async (
     usernames: string[]
 ) => {
     const channelFullPath: String =
-            `https://discord.com/channels/${guild.id}/${channel.id}`;
+        `https://discord.com/channels/${guild.id}/${channel.id}`;
     users.map(async u => await u.send({embeds: [FailedReadyCheckDMEmbed(channelFullPath, usernames)]}));
 
 };

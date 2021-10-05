@@ -7,7 +7,8 @@ import {
     pugQueueBotMessage,
     pugQueueBotTextChannel,
     queuedUsers,
-    ReadyCheckPlayer
+    ReadyCheckPlayer,
+    readyCheckTime
 } from "../state/state";
 import {SendFailedReadyCheckDirectMessages} from "../direct_messages/SendFailedReadyCheckDirectMessages";
 import {MapPoolEmbed} from "../embeds/MapPoolEmbed";
@@ -35,7 +36,7 @@ export class PickupGame {
         this._textChannel = textChannel;
         this._voiceChannel = voiceChannel;
         this._message = message;
-        this._countdown = 24;
+        this._countdown = readyCheckTime;
         this.readyCheckTimer();
     }
 
@@ -91,6 +92,10 @@ export class PickupGame {
 
     private _countdown: number;
 
+    get countdown(): number {
+        return this._countdown;
+    }
+
     get id(): number {
         return this._id;
     }
@@ -112,9 +117,10 @@ export class PickupGame {
     }
 
     readyCheckTimer() {
+        const countdownIteration = 5000/*every 5 seconds*/;
         setTimeout(async () => {
             if (!activePugs.find(ap => ap === this) || !!this._redTeamVoiceChannel) {
-                this._countdown = 24;
+                this._countdown = ((readyCheckTime * 1000) / countdownIteration);
                 return;
             }
             if (this._countdown < 1 && !!this._players.find(p => !p.isReady)) {
@@ -146,7 +152,7 @@ export class PickupGame {
                         queuedUsers.splice(queuedUsers.indexOf(queuedUser), 1);
                         if (i === (matchSize - 1)) {
                             await this.message.edit({
-                                embeds: [ReadyCheckEmbed(this.players)]
+                                embeds: [ReadyCheckEmbed(this.players, (this._countdown * 5))]
                             });
                             await pugQueueBotMessage.edit({
                                 embeds: [MapPoolEmbed(), QueueEmbed()]
@@ -154,11 +160,11 @@ export class PickupGame {
                         }
                     }
                 }
-                this._countdown = 24;
+                this._countdown = ((readyCheckTime * 1000) / countdownIteration);
             }
             this._countdown -= 1;
             this.readyCheckTimer();
-        }, (5 * 1000));
+        }, (countdownIteration));
     }
 
 }

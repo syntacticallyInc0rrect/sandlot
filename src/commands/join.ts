@@ -12,6 +12,7 @@ import {
     pugQueueBotMessage,
     queuedUsers,
     ReadyCheckPlayer,
+    readyCheckTime,
     updateActivePugs,
     updateQueuedUsers,
     wipeQueuedUsers
@@ -48,7 +49,10 @@ const createNewActivePug = async (interaction: CommandInteraction) => {
                 textChannel = tc;
                 await textChannel.send({
                     content: bold("/----- 𝙍𝙚𝙖𝙙𝙮 𝘾𝙝𝙚𝙘𝙠 -----/"),
-                    embeds: [ReadyCheckEmbed(players.map(p => <ReadyCheckPlayer>{user: p, isReady: false}))],
+                    embeds: [ReadyCheckEmbed(players.map(
+                            p => <ReadyCheckPlayer>{user: p, isReady: false}),
+                        readyCheckTime
+                    )],
                     components: [ReadyCheckButtonRow()]
                 }).then(m => message = m);
             });
