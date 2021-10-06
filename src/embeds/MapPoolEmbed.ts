@@ -10,11 +10,11 @@ export const MapPoolEmbed = (): MessageEmbed => {
         },
         title: "Map Pool",
         fields: [
-            {
-                name: "Suggested Map",
-                value: suggestedMap,
-                inline: false
-            },
+            // {
+            //     name: "Suggested Map",
+            //     value: suggestedMap,
+            //     inline: false
+            // },git
             {
                 name: "Recently Played Maps",
                 value: previousPlayedMaps.length > 0 ? previousPlayedMaps.toString() : "No maps have been played yet.",
