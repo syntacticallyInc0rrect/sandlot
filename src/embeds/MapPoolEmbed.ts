@@ -23,6 +23,7 @@ export const MapPoolEmbed = (): MessageEmbed => {
             {
                 name: "Available Maps",
                 value: availableMaps
+                    .sort()
                     .toString()
                     .replace(/\s*,\s*|\s+,/g, "\n"),
                 inline: false

@@ -95,20 +95,6 @@ export const updatePugQueueBotMessage = (pqbm: Message) => pugQueueBotMessage = 
 export let pugCount: number = 0;
 export const increasePugCount = () => pugCount += 1;
 
-export const previousPlayedMaps: string[] = [];
-export const updatePreviousPlayedMaps = (map: string, action: MultiplesAction) => {
-    switch (action) {
-        case MultiplesAction.ADD:
-            previousPlayedMaps.push(map);
-            break;
-        case MultiplesAction.REMOVE:
-            previousPlayedMaps.splice(previousPlayedMaps.indexOf(map));
-            break;
-        default:
-            break;
-    }
-};
-
 //TODO: configurable map pool
 export const availableMaps: string[] = [
     "Farmhouse West",
@@ -144,6 +130,31 @@ export const updateAvailableMaps = (map: string, action: MultiplesAction) => {
 export let suggestedMap: string;
 export const updateSuggestedMap = () => {
     suggestedMap = availableMaps[Math.floor(Math.random() * availableMaps.length)];
+};
+
+export const previousPlayedMaps: string[] = [];
+export const updatePreviousPlayedMaps = (map: string, action: MultiplesAction) => {
+    switch (action) {
+        case MultiplesAction.ADD:
+            availableMaps.splice(availableMaps.indexOf(map), 1);
+            previousPlayedMaps.push(map);
+            if (previousPlayedMaps.length > 3) {
+                availableMaps.push(previousPlayedMaps[0]);
+                previousPlayedMaps.splice(0, 1);
+            }
+            updateSuggestedMap();
+            break;
+        case MultiplesAction.REMOVE:
+            previousPlayedMaps.splice(previousPlayedMaps.indexOf(map));
+            break;
+        default:
+            break;
+    }
+};
+
+export const resetMaps = () => {
+    previousPlayedMaps.forEach(ppm => availableMaps.push(ppm));
+    previousPlayedMaps.splice(0, previousPlayedMaps.length);
 };
 
 export const queuedUsers: (User | PartialUser)[] = [];
@@ -192,11 +203,6 @@ export const cancelActivePug = async (activePug: PickupGame) => {
 export const cancelAllActivePugs = () => activePugs.splice(0, activePugs.length);
 
 export const wipeQueuedUsers = () => queuedUsers.splice(0, queuedUsers.length);
-
-export const resetMaps = () => {
-    previousPlayedMaps.forEach(ppm => availableMaps.push(ppm));
-    previousPlayedMaps.splice(0, previousPlayedMaps.length);
-};
 
 export const resetBot = () => {
     resetMaps();

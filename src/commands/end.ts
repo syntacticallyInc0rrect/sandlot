@@ -5,7 +5,10 @@ import {
     CommandDescOption,
     CommandNameOption,
     initiated,
+    MultiplesAction,
     pugAuditTextChannel,
+    suggestedMap,
+    updatePreviousPlayedMaps, updateSuggestedMap,
 } from "../state/state";
 import {CommandInteraction} from "discord.js";
 import {PickupGame} from "../classes/PickupGame";
@@ -34,6 +37,7 @@ const handleEndCommand = async (interaction: CommandInteraction) => {
                 fetchReply: false
             });
         } else {
+            updatePreviousPlayedMaps(suggestedMap, MultiplesAction.ADD);
             await cancelActivePug(activePug).then(() => pugAuditTextChannel.send({
                 content: codeBlock(`Pickup Game #${activePug.id} was ended by ${interaction.user.username}`)
             }));
