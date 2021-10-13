@@ -2,7 +2,6 @@ import {SlashCommandBuilder} from '@discordjs/builders';
 import {CommandInteraction} from "discord.js";
 import {
     activePugs,
-    assignRandomTeams,
     CommandDescOption,
     CommandNameOption,
     guild,
@@ -14,6 +13,8 @@ import {ReadyCheckEmbed} from "../embeds/ReadyCheckEmbed";
 import {PickupGameEmbed} from "../embeds/PickupGameEmbed";
 import {moveUsersToVoiceChannel} from "../helpers/moveUsersToVoiceChannel";
 import {EndPugButtonRow} from "../rows/EndPugButtonRow";
+import {assignRandomTeams} from "../helpers/assignRandomTeams";
+import {assignRandomCaptains} from "../helpers/assignRandomCaptains";
 
 const handleReadyCommand = async (interaction: CommandInteraction) => {
     const activePug: PickupGame | undefined = activePugs.find(ap => ap.players.find(p => p.user === interaction.user));
@@ -35,6 +36,7 @@ const handleReadyCommand = async (interaction: CommandInteraction) => {
                 embeds: [ReadyCheckEmbed(activePug.players, activePug.readyCheckCountdown)]
             });
         } else {
+            assignRandomCaptains(activePug);
             assignRandomTeams(activePug);
             await guild.channels.create("🎮 Insurgents", {
                 parent: activePug.category,

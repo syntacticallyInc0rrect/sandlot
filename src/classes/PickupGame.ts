@@ -30,6 +30,8 @@ export class PickupGame {
     private _readyCheckCountdown: number;
     private _mapVoteCountdown: number;
     private _map: string | undefined;
+    private _redTeamCaptain: (User | PartialUser) | undefined;
+    private _blueTeamCaptain: (User | PartialUser) | undefined;
 
     constructor(
         id: number,
@@ -124,6 +126,22 @@ export class PickupGame {
 
     get message(): Message {
         return this._message;
+    }
+
+    get redTeamCaptain(): (User | PartialUser) | undefined {
+        return this._redTeamCaptain;
+    }
+
+    set redTeamCaptain(value: User | PartialUser | undefined) {
+        this._redTeamCaptain = value;
+    }
+
+    get blueTeamCaptain(): (User | PartialUser) | undefined {
+        return this._blueTeamCaptain;
+    }
+
+    set blueTeamCaptain(value: User | PartialUser | undefined) {
+        this._blueTeamCaptain = value;
     }
 
     pastReadyCheck(): boolean {

@@ -53,6 +53,9 @@ client.on('interactionCreate', async (interaction: Interaction) => {
             case ButtonCustomIdOption.not_ready.valueOf():
                 await client.commands.get(CommandNameOption.not_ready.valueOf()).execute(interaction);
                 break;
+            case ButtonCustomIdOption.volunteer.valueOf():
+                await client.commands.get(CommandNameOption.volunteer.valueOf()).execute(interaction);
+                break;
             case ButtonCustomIdOption.end.valueOf():
                 await interaction.reply({
                     content: 'Are you sure you want to end the Pickup Game? ' +

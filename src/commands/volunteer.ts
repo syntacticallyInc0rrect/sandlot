@@ -24,18 +24,18 @@ const handleVolunteerCommand = async (interaction: CommandInteraction) => {
                 embeds: [ReadyCheckEmbed(activePug.players, activePug.readyCheckCountdown)]
             });
         }
-        await interaction.reply({
-            content: replyContent,
-            ephemeral: true,
-            fetchReply: false
-        });
     }
+    await interaction.reply({
+        content: replyContent,
+        ephemeral: true,
+        fetchReply: false
+    });
 }
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName(CommandNameOption.ready)
-        .setDescription(CommandDescOption.ready),
+        .setName(CommandNameOption.volunteer)
+        .setDescription(CommandDescOption.volunteer),
     async execute(interaction: CommandInteraction) {
         await handleVolunteerCommand(interaction).catch(e => console.log(e));
     },

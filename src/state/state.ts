@@ -25,7 +25,8 @@ export enum CommandNameOption {
     'ping' = 'ping',
     'ready' = 'ready',
     'reset' = 'reset',
-    'terminate' = 'terminate'
+    'terminate' = 'terminate',
+    'volunteer' = 'volunteer'
 }
 
 export enum CommandDescOption {
@@ -39,7 +40,8 @@ export enum CommandDescOption {
     'ping' = 'Replies with Pong!',
     'ready' = 'Changes user\'s Ready Check status to Ready',
     'reset' = 'Removes all queued players from the PUG Queue',
-    'terminate' = 'Terminates the PUG Bot'
+    'terminate' = 'Terminates the PUG Bot',
+    'volunteer' = 'Volunteer\'s user for PUG Captain'
 }
 
 export enum ButtonCustomIdOption {
@@ -113,8 +115,8 @@ export const availableMaps: string[] = [
     "Tideway West"
 ];
 
-export let matchSize: number = 10;
-// export let matchSize: number = 2;
+// export let matchSize: number = 10;
+export let matchSize: number = 2;
 export const updateMatchSize = (newSize: number) => matchSize = newSize;
 
 export const updateAvailableMaps = (map: string, action: MultiplesAction) => {
@@ -211,18 +213,6 @@ export const resetBot = () => {
     resetMaps();
     wipeQueuedUsers();
     cancelAllActivePugs();
-};
-
-export const assignRandomTeams = (pug: PickupGame) => {
-    const players = pug.players.map(p => p.user);
-    const totalPlayerCount = pug.players.length;
-    const teamCount = totalPlayerCount / 2;
-    for (let i = 0; i < teamCount; i++) {
-        const randomPlayer = players[Math.floor(Math.random() * players.length)];
-        pug.redTeam.push(randomPlayer);
-        players.splice(players.indexOf(randomPlayer), 1);
-    }
-    pug.blueTeam = [...players];
 };
 
 export const thumbnailUrl =

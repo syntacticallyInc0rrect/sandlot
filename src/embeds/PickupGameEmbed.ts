@@ -15,16 +15,16 @@ export const PickupGameEmbed = (pug: PickupGame): MessageEmbed => {
             },
             {
                 name: `Insurgents`,
-                value: pug.redTeam.map(p => `${memberNicknameMention(p.id)}`)
-                    .toString()
-                    .replace(/\s*,\s*|\s+,/g, "\n"),
+                value: pug.redTeam.map(
+                    p => `${memberNicknameMention(p.id)}${p === pug.redTeamCaptain || p === pug.blueTeamCaptain ? '⭐' : ''}`
+                ).toString().replace(/\s*,\s*|\s+,/g, "\n"),
                 inline: false
             },
             {
                 name: `Security`,
-                value: pug.blueTeam.map(p => `${memberNicknameMention(p.id)}`)
-                    .toString()
-                    .replace(/\s*,\s*|\s+,/g, "\n"),
+                value: pug.blueTeam.map(
+                    p => `${memberNicknameMention(p.id)}${p === pug.redTeamCaptain || p === pug.blueTeamCaptain ? '⭐' : ''}`
+                ).toString().replace(/\s*,\s*|\s+,/g, "\n"),
                 inline: false
             }
         ]
