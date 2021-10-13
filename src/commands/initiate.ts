@@ -18,8 +18,8 @@ import {
 import {InitialButtonRow} from "../rows/InitialButtonRow";
 import {MapPoolEmbed} from "../embeds/MapPoolEmbed";
 import {QueueEmbed} from "../embeds/QueueEmbed";
-import {GetPugPermissions} from "../helpers/GetPugPermissions";
-import {GetAdminPermissions} from "../helpers/GetAdminPermissions";
+import {getPugPermissions} from "../helpers/getPugPermissions";
+import {getAdminPermissions} from "../helpers/getAdminPermissions";
 
 const createPickupGameChannels = async (interaction: CommandInteraction) => {
     const guild = interaction.guild;
@@ -30,7 +30,7 @@ const createPickupGameChannels = async (interaction: CommandInteraction) => {
             await guild.channels.create("pug-bot", {
                 parent: category,
                 type: "GUILD_TEXT",
-                permissionOverwrites: GetPugPermissions(guild)
+                permissionOverwrites: getPugPermissions(guild)
             }).then(async bc => {
                 updatePugQueueBotTextChannel(bc);
                 updateSuggestedMap();
@@ -43,7 +43,7 @@ const createPickupGameChannels = async (interaction: CommandInteraction) => {
             await guild.channels.create("pug-audit-log", {
                 parent: category,
                 type: "GUILD_TEXT",
-                permissionOverwrites: GetAdminPermissions(guild)
+                permissionOverwrites: getAdminPermissions(guild)
             }).then(m => {
                 updatePugAuditTextChannel(m);
                 pugAuditTextChannel.send({

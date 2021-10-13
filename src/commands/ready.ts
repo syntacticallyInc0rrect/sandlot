@@ -7,12 +7,12 @@ import {
     CommandNameOption,
     guild,
     initiated,
-    ReadyCheckPlayer
+    PugPlayer
 } from "../state/state";
 import {PickupGame} from "../classes/PickupGame";
 import {ReadyCheckEmbed} from "../embeds/ReadyCheckEmbed";
 import {PickupGameEmbed} from "../embeds/PickupGameEmbed";
-import {MoveUsersToVoiceChannel} from "../helpers/MoveUsersToVoiceChannel";
+import {moveUsersToVoiceChannel} from "../helpers/moveUsersToVoiceChannel";
 import {EndPugButtonRow} from "../rows/EndPugButtonRow";
 
 const handleReadyCommand = async (interaction: CommandInteraction) => {
@@ -25,14 +25,14 @@ const handleReadyCommand = async (interaction: CommandInteraction) => {
                 "Your Pickup Game is already passed the Ready Check phase." :
                 "You are now Ready for your Pickup Game!";
     if (initiated && !!activePug && !activePug.pastReadyCheck()) {
-        const maybePugPlayer: ReadyCheckPlayer | undefined = activePug.players.find(p => p.user === interaction.user);
+        const maybePugPlayer: PugPlayer | undefined = activePug.players.find(p => p.user === interaction.user);
         if (!maybePugPlayer) throw Error(
             "Somehow the interaction user is not found in the Pickup Game players when they were expected to be."
         );
         maybePugPlayer.isReady = true;
         if (!!activePug.players.find(p => !p.isReady)) {
             await activePug.message.edit({
-                embeds: [ReadyCheckEmbed(activePug.players, activePug.countdown)]
+                embeds: [ReadyCheckEmbed(activePug.players, activePug.readyCheckCountdown)]
             });
         } else {
             assignRandomTeams(activePug);
@@ -41,14 +41,14 @@ const handleReadyCommand = async (interaction: CommandInteraction) => {
                 type: "GUILD_VOICE"
             }).then(async rtvc => {
                 activePug.redTeamVoiceChannel = rtvc;
-                await MoveUsersToVoiceChannel(activePug.redTeam, rtvc);
+                await moveUsersToVoiceChannel(activePug.redTeam, rtvc);
             });
             await guild.channels.create("🎮 Security", {
                 parent: activePug.category,
                 type: "GUILD_VOICE"
             }).then(async btvc => {
                 activePug.blueTeamVoiceChannel = btvc;
-                await MoveUsersToVoiceChannel(activePug.blueTeam, btvc);
+                await moveUsersToVoiceChannel(activePug.blueTeam, btvc);
             });
             await activePug.textChannel.edit({name: `pug-${activePug.id}`})
             await activePug.message.edit({

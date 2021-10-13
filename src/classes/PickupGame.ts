@@ -2,15 +2,15 @@ import {CategoryChannel, Message, PartialUser, TextChannel, User, VoiceChannel} 
 import {
     activePugs,
     cancelActivePug,
-    guild,
+    guild, mapVoteTime,
     matchSize,
     pugQueueBotMessage,
     pugQueueBotTextChannel,
     queuedUsers,
-    ReadyCheckPlayer,
+    PugPlayer,
     readyCheckTime
 } from "../state/state";
-import {SendFailedReadyCheckDirectMessages} from "../direct_messages/SendFailedReadyCheckDirectMessages";
+import {sendFailedReadyCheckDirectMessages} from "../direct_messages/sendFailedReadyCheckDirectMessages";
 import {MapPoolEmbed} from "../embeds/MapPoolEmbed";
 import {QueueEmbed} from "../embeds/QueueEmbed";
 import {ReadyCheckEmbed} from "../embeds/ReadyCheckEmbed";
@@ -21,10 +21,19 @@ export class PickupGame {
     private readonly _textChannel: TextChannel;
     private readonly _voiceChannel: VoiceChannel;
     private readonly _message: Message;
+    private readonly _countdownIteration: number = 5000; /*every 5 seconds*/
+    private _players: PugPlayer[];
+    private _redTeam: (User | PartialUser)[] = [];
+    private _blueTeam: (User | PartialUser)[] = [];
+    private _redTeamVoiceChannel: VoiceChannel | undefined;
+    private _blueTeamVoiceChannel: VoiceChannel | undefined;
+    private _readyCheckCountdown: number;
+    private _mapVoteCountdown: number;
+    private _map: string | undefined;
 
     constructor(
         id: number,
-        players: ReadyCheckPlayer[],
+        players: PugPlayer[],
         category: CategoryChannel,
         textChannel: TextChannel,
         voiceChannel: VoiceChannel,
@@ -36,21 +45,18 @@ export class PickupGame {
         this._textChannel = textChannel;
         this._voiceChannel = voiceChannel;
         this._message = message;
-        this._countdown = readyCheckTime;
+        this._readyCheckCountdown = readyCheckTime;
+        this._mapVoteCountdown = mapVoteTime;
         this.readyCheckTimer();
     }
 
-    private _players: ReadyCheckPlayer[];
-
-    get players(): ReadyCheckPlayer[] {
+    get players(): PugPlayer[] {
         return this._players;
     }
 
-    set players(value: ReadyCheckPlayer[]) {
+    set players(value: PugPlayer[]) {
         this._players = value;
     }
-
-    private _redTeam: (User | PartialUser)[] = [];
 
     get redTeam(): (User | PartialUser)[] {
         return this._redTeam;
@@ -60,8 +66,6 @@ export class PickupGame {
         this._redTeam = value;
     }
 
-    private _blueTeam: (User | PartialUser)[] = [];
-
     get blueTeam(): (User | PartialUser)[] {
         return this._blueTeam;
     }
@@ -69,8 +73,6 @@ export class PickupGame {
     set blueTeam(value: (User | PartialUser)[]) {
         this._blueTeam = value;
     }
-
-    private _redTeamVoiceChannel: VoiceChannel | undefined;
 
     get redTeamVoiceChannel(): VoiceChannel | undefined {
         return this._redTeamVoiceChannel;
@@ -80,8 +82,6 @@ export class PickupGame {
         this._redTeamVoiceChannel = value;
     }
 
-    private _blueTeamVoiceChannel: VoiceChannel | undefined;
-
     get blueTeamVoiceChannel(): VoiceChannel | undefined {
         return this._blueTeamVoiceChannel;
     }
@@ -90,10 +90,20 @@ export class PickupGame {
         this._blueTeamVoiceChannel = value;
     }
 
-    private _countdown: number;
+    get readyCheckCountdown(): number {
+        return this._readyCheckCountdown;
+    }
 
-    get countdown(): number {
-        return this._countdown;
+    get mapVoteCountdown(): number {
+        return this._mapVoteCountdown;
+    }
+
+    get map(): string | undefined {
+        return this._map;
+    }
+
+    set map(value: string | undefined) {
+        this._map = value;
     }
 
     get id(): number {
@@ -121,13 +131,12 @@ export class PickupGame {
     }
 
     readyCheckTimer() {
-        const countdownIteration = 5000/*every 5 seconds*/;
         setTimeout(async () => {
             if (!activePugs.find(ap => ap === this) || this.pastReadyCheck()) {
-                this._countdown = readyCheckTime;
+                this._readyCheckCountdown = readyCheckTime;
                 return;
             }
-            if (this._countdown < 1 && !this.pastReadyCheck()) {
+            if (this._readyCheckCountdown < 1 && !this.pastReadyCheck()) {
                 let readyPlayers = this._players.filter(p => p.isReady);
                 if (queuedUsers.length + (matchSize - readyPlayers.length) < matchSize) {
                     readyPlayers.forEach(rp => queuedUsers.push(rp.user));
@@ -139,7 +148,7 @@ export class PickupGame {
                             )?.nickname;
                             return !!nickname ? nickname : !!nrp.user.username ? nrp.user.username : "";
                         });
-                    await SendFailedReadyCheckDirectMessages(
+                    await sendFailedReadyCheckDirectMessages(
                         this._players.map(p => p.user),
                         pugQueueBotTextChannel,
                         usernamesOrNicknames
@@ -152,11 +161,11 @@ export class PickupGame {
                     this._players = this._players.filter(ap => ap.isReady);
                     for (let i = this._players.length; i < matchSize; i++) {
                         const queuedUser = queuedUsers[0];
-                        this._players.push({user: queuedUser, isReady: false});
+                        this._players.push({user: queuedUser, isReady: false, isVolunteer: false, hasVoted: false});
                         queuedUsers.splice(queuedUsers.indexOf(queuedUser), 1);
                         if (i === (matchSize - 1)) {
                             await this.message.edit({
-                                embeds: [ReadyCheckEmbed(this.players, this._countdown)]
+                                embeds: [ReadyCheckEmbed(this.players, this._readyCheckCountdown)]
                             });
                             await pugQueueBotMessage.edit({
                                 embeds: [MapPoolEmbed(), QueueEmbed()]
@@ -164,15 +173,30 @@ export class PickupGame {
                         }
                     }
                 }
-                this._countdown = ((readyCheckTime * 1000) / countdownIteration);
+                this._readyCheckCountdown = ((readyCheckTime * 1000) / this._countdownIteration);
                 return;
             }
             await this.message.edit({
-                embeds: [ReadyCheckEmbed(this.players, this._countdown)]
+                embeds: [ReadyCheckEmbed(this.players, this._readyCheckCountdown)]
             });
-            this._countdown -= (countdownIteration / 1000);
+            this._readyCheckCountdown -= (this._countdownIteration / 1000);
             this.readyCheckTimer();
-        }, (countdownIteration));
+        }, (this._countdownIteration));
+    }
+
+    mapVoteTimer() {
+        setTimeout(async () => {
+            if (this._mapVoteCountdown < 1) {
+                this._mapVoteCountdown = mapVoteTime;
+                return;
+            } else {
+                await this.message.edit({
+                    // embeds: [MapVoteEmbed(this.players, this._mapVoteCountdown)]
+                });
+                this._mapVoteCountdown -= (this._countdownIteration / 1000);
+                this.mapVoteTimer();
+            }
+        }, (this._countdownIteration));
     }
 
 }

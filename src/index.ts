@@ -2,8 +2,8 @@ import {Collection, Intents, Interaction, MessageReaction, PartialMessageReactio
 import {guildId, token} from "./secrets/config.json";
 import * as fs from "fs";
 import {ButtonCustomIdOption, CommandNameOption, updateClient, updateGuild} from "./state/state";
-import {DeployCommands} from "./init/DeployCommands";
-import {CommandPermissions} from "./init/CommandPermissions";
+import {deployCommands} from "./init/deployCommands";
+import {commandPermissions} from "./init/commandPermissions";
 import {EndPugSelectRow} from "./rows/EndPugSelectRow";
 
 const {Client} = require('discord.js');
@@ -20,8 +20,8 @@ client.on('ready', async () => {
     updateClient(client);
     updateGuild(client.guilds.cache.get(guildId));
     console.log(`Logged in as ${client.user.tag}!`);
-    await DeployCommands();
-    await CommandPermissions();
+    await deployCommands();
+    await commandPermissions();
 });
 
 client.on('interactionCreate', async (interaction: Interaction) => {

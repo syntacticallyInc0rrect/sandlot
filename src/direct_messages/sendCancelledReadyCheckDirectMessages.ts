@@ -2,7 +2,7 @@ import {PartialUser, TextChannel, User} from "discord.js";
 import {guild} from "../state/state";
 import {CancelledReadyCheckDMEmbed} from "../embeds/CancelledReadyCheckDMEmbed";
 
-export const SendCancelledReadyCheckDirectMessages = async (
+export const sendCancelledReadyCheckDirectMessages = async (
     users: (User | PartialUser)[],
     channel: TextChannel,
     username: string

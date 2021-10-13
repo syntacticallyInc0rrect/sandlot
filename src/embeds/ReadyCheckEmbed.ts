@@ -1,9 +1,8 @@
 import {MessageEmbed, MessageEmbedOptions} from "discord.js";
 import {memberNicknameMention} from "@discordjs/builders";
-import {authorIconUrl, ReadyCheckPlayer, thumbnailUrl} from "../state/state";
+import {authorIconUrl, PugPlayer, thumbnailUrl} from "../state/state";
 
-
-export const ReadyCheckEmbed = (players: ReadyCheckPlayer[], countdown: number): MessageEmbed => {
+export const ReadyCheckEmbed = (players: PugPlayer[], countdown: number): MessageEmbed => {
     const props: MessageEmbedOptions = {
         title: `Ready Check!`,
         description: `${countdown}s remaining`,
@@ -12,7 +11,7 @@ export const ReadyCheckEmbed = (players: ReadyCheckPlayer[], countdown: number):
             {
                 name: `Who is ready?`,
                 value: players.map(
-                    p => `${p.isReady ? '✅' : '❌'}  ${memberNicknameMention(p.user.id)}`
+                    p => `${p.isReady ? '✅' : '❌'}  ${memberNicknameMention(p.user.id)}  ${p.isVolunteer ? '⭐' : ''}`
                 )
                     .toString()
                     .replace(/\s*,\s*|\s+,/g, "\n"),

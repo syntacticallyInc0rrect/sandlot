@@ -15,8 +15,8 @@ import {PickupGame} from "../classes/PickupGame";
 import {ReadyCheckEmbed} from "../embeds/ReadyCheckEmbed";
 import {MapPoolEmbed} from "../embeds/MapPoolEmbed";
 import {QueueEmbed} from "../embeds/QueueEmbed";
-import {SendReadyCheckDirectMessages} from "../direct_messages/SendReadyCheckDirectMessages";
-import {SendCancelledReadyCheckDirectMessages} from "../direct_messages/SendCancelledReadyCheckDirectMessages";
+import {sendReadyCheckDirectMessages} from "../direct_messages/sendReadyCheckDirectMessages";
+import {sendCancelledReadyCheckDirectMessages} from "../direct_messages/sendCancelledReadyCheckDirectMessages";
 
 const handleNotReadyCommand = async (interaction: CommandInteraction) => {
     const activePug: PickupGame | undefined = activePugs.find(ap => ap.players.find(p => p.user === interaction.user));
@@ -33,11 +33,11 @@ const handleNotReadyCommand = async (interaction: CommandInteraction) => {
             throw Error("Someone the Player that Cancelled in the Ready Check does not exist in the Ready Check.");
         activePug.players.splice(activePug.players.indexOf(playerThatCancelled), 1);
         if (queuedUsers.length > 0) {
-            activePug.players.push({user: queuedUsers[0], isReady: false});
-            await SendReadyCheckDirectMessages([queuedUsers[0]], activePug.textChannel);
+            activePug.players.push({user: queuedUsers[0], isReady: false, isVolunteer: false, hasVoted: false});
+            await sendReadyCheckDirectMessages([queuedUsers[0]], activePug.textChannel);
             queuedUsers.splice(0, 1);
             await activePug.message.edit({
-                embeds: [ReadyCheckEmbed(activePug.players, activePug.countdown)]
+                embeds: [ReadyCheckEmbed(activePug.players, activePug.readyCheckCountdown)]
             });
             await pugQueueBotMessage.edit({
                 embeds: [MapPoolEmbed(), QueueEmbed()]
@@ -49,7 +49,7 @@ const handleNotReadyCommand = async (interaction: CommandInteraction) => {
                 maybeGuild.members.cache.find(m => m.user === interaction.user);
             const maybeNickname: string | null | undefined = maybeGuild && maybeGuildMember &&
                 maybeGuildMember.nickname;
-            await SendCancelledReadyCheckDirectMessages(
+            await sendCancelledReadyCheckDirectMessages(
                 activePug.players.map(p => p.user),
                 pugQueueBotTextChannel,
                 maybeNickname ? maybeNickname : interaction.user.username

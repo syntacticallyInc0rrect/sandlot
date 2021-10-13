@@ -10,11 +10,11 @@ export const MapPoolEmbed = (): MessageEmbed => {
         },
         title: "Map Pool",
         fields: [
-            // {
-            //     name: "Suggested Map",
-            //     value: suggestedMap,
-            //     inline: false
-            // },git
+            {
+                name: "Suggested Map",
+                value: suggestedMap,
+                inline: false
+            },
             {
                 name: "Recently Played Maps",
                 value: previousPlayedMaps.length > 0 ? previousPlayedMaps.toString() : "No maps have been played yet.",
@@ -30,7 +30,7 @@ export const MapPoolEmbed = (): MessageEmbed => {
             }
         ],
         thumbnail: {url: thumbnailUrl},
-        image: {url: "https://media.discordapp.net/attachments/444642545650368515/892192879416594472/35065577_199992113974090_7495179052093800448_n.png"}
+        image: {url: authorIconUrl}
     };
     return new MessageEmbed(props);
 };

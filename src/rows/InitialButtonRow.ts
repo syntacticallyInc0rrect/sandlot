@@ -1,5 +1,6 @@
-import {MessageActionRow, MessageButton} from "discord.js";
+import {MessageActionRow} from "discord.js";
 import {ButtonCustomIdOption, ButtonRowProps} from "../state/state";
+import {generateActionRow} from "../helpers/generateActionRow";
 
 export const InitialButtonRow = (): MessageActionRow => {
     const props: ButtonRowProps[] = [
@@ -7,15 +8,5 @@ export const InitialButtonRow = (): MessageActionRow => {
         {customId: ButtonCustomIdOption.leave.valueOf(), label: 'Leave', style: 'DANGER', emoji: '➖'},
         // {customId: ButtonCustomIdOption.afkImmune.valueOf(), label: 'AFK Immune', style: 'PRIMARY', emoji: '⏳'}
     ];
-    return new MessageActionRow()
-        .addComponents(props
-            .map(prop => new MessageButton()
-                .setCustomId(prop.customId)
-                .setLabel(prop.label)
-                .setStyle(prop.style)
-                .setEmoji(prop.emoji ? prop.emoji : "")
-                .setURL(prop.url ? prop.url : "")
-                .setDisabled(prop.disabled ? prop.disabled : false)
-            )
-        )
+    return generateActionRow(props);
 };

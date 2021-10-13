@@ -1,7 +1,7 @@
 import {PartialUser, User, VoiceChannel} from "discord.js";
 import {guild} from "../state/state";
 
-export const MoveUsersToVoiceChannel = async (
+export const moveUsersToVoiceChannel = async (
     users: (User | PartialUser)[],
     voiceChannel: VoiceChannel
 ): Promise<any> => {

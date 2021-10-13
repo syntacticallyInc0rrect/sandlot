@@ -12,7 +12,7 @@ import {
     VoiceChannel
 } from "discord.js";
 import {PickupGame} from "../classes/PickupGame";
-import {MoveUsersToVoiceChannel} from "../helpers/MoveUsersToVoiceChannel";
+import {moveUsersToVoiceChannel} from "../helpers/moveUsersToVoiceChannel";
 
 export enum CommandNameOption {
     'afkImmune' = 'afkImmune',
@@ -48,7 +48,8 @@ export enum ButtonCustomIdOption {
     'not_ready' = 'not_ready',
     'join' = `joinQueue`,
     'leave' = 'leaveQueue',
-    'ready' = 'ready'
+    'ready' = 'ready',
+    'volunteer' = 'volunteer'
 }
 
 export enum MultiplesAction {
@@ -65,9 +66,11 @@ export type ButtonRowProps = {
     disabled?: boolean
 };
 
-export type ReadyCheckPlayer = {
+export type PugPlayer = {
     user: (User | PartialUser),
-    isReady: boolean
+    isReady: boolean,
+    isVolunteer: boolean,
+    hasVoted: boolean
 }
 
 export let initiated: boolean;
@@ -188,7 +191,7 @@ export const updateActivePugs = (pug: PickupGame, action: MultiplesAction) => {
 };
 
 export const cancelActivePug = async (activePug: PickupGame) => {
-    await MoveUsersToVoiceChannel(activePug.players.map(p => p.user), pugQueueVoiceChannel).catch();
+    await moveUsersToVoiceChannel(activePug.players.map(p => p.user), pugQueueVoiceChannel).catch();
     const channelExists = (channel: Channel) => !!guild.channels.cache.get(channel.id);
     if (channelExists(activePug.category)) await activePug.category.delete().catch();
     if (channelExists(activePug.textChannel)) await activePug.textChannel.delete().catch();
@@ -228,4 +231,6 @@ export const thumbnailUrl =
 export const authorIconUrl =
     "https://images-ext-1.discordapp.net/external/ZUgVOtxXsm71dQ6V7hxBhuIBp4z7-7mWRj3UNiTPPA0/https/i.imgur.com/h2xgWfa.png?width=681&height=676"
 
-export const readyCheckTime = 150;/*number of seconds*/
+/*number of seconds*/
+export const readyCheckTime = 150;
+export const mapVoteTime = 30;

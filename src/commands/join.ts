@@ -11,7 +11,7 @@ import {
     pugCount,
     pugQueueBotMessage,
     queuedUsers,
-    ReadyCheckPlayer,
+    PugPlayer,
     readyCheckTime,
     updateActivePugs,
     updateQueuedUsers,
@@ -22,9 +22,10 @@ import {QueueEmbed} from "../embeds/QueueEmbed";
 import {PickupGame} from "../classes/PickupGame";
 import {ReadyCheckEmbed} from "../embeds/ReadyCheckEmbed";
 import {ReadyCheckButtonRow} from "../rows/ReadyCheckButtonRow";
-import {SendReadyCheckDirectMessages} from "../direct_messages/SendReadyCheckDirectMessages";
-import {MoveUsersToVoiceChannel} from "../helpers/MoveUsersToVoiceChannel";
-import {GetPugPermissions} from "../helpers/GetPugPermissions";
+import {sendReadyCheckDirectMessages} from "../direct_messages/sendReadyCheckDirectMessages";
+import {moveUsersToVoiceChannel} from "../helpers/moveUsersToVoiceChannel";
+import {getPugPermissions} from "../helpers/getPugPermissions";
+import {VolunteerButtonRow} from "../rows/VolunteerButtonRow";
 
 const createNewActivePug = async (interaction: CommandInteraction) => {
     const guild = interaction.guild;
@@ -44,16 +45,16 @@ const createNewActivePug = async (interaction: CommandInteraction) => {
             await guild.channels.create("ready-check", {
                 parent: category,
                 type: "GUILD_TEXT",
-                permissionOverwrites: GetPugPermissions(guild)
+                permissionOverwrites: getPugPermissions(guild)
             }).then(async tc => {
                 textChannel = tc;
                 await textChannel.send({
                     content: bold("/----- 𝙍𝙚𝙖𝙙𝙮 𝘾𝙝𝙚𝙘𝙠 -----/"),
                     embeds: [ReadyCheckEmbed(players.map(
-                            p => <ReadyCheckPlayer>{user: p, isReady: false}),
+                            p => <PugPlayer>{user: p, isReady: false}),
                         readyCheckTime
                     )],
-                    components: [ReadyCheckButtonRow()]
+                    components: [ReadyCheckButtonRow(), VolunteerButtonRow()]
                 }).then(m => message = m);
             });
             await guild.channels.create(`PUG #${pugCount} VC`, {
@@ -62,14 +63,14 @@ const createNewActivePug = async (interaction: CommandInteraction) => {
             }).then(vc => voiceChannel = vc);
             updateActivePugs(new PickupGame(
                 pugCount,
-                players.map(p => <ReadyCheckPlayer>{user: p, isReady: false}),
+                players.map(p => <PugPlayer>{user: p, isReady: false, isVolunteer: false, hasVoted: false}),
                 category,
                 textChannel,
                 voiceChannel,
                 message
             ), MultiplesAction.ADD);
-            await SendReadyCheckDirectMessages(players, textChannel);
-            await MoveUsersToVoiceChannel(players, voiceChannel);
+            await sendReadyCheckDirectMessages(players, textChannel);
+            await moveUsersToVoiceChannel(players, voiceChannel);
             wipeQueuedUsers();
         });
 };
