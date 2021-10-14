@@ -24,5 +24,7 @@ export const assignRandomCaptains = (pug: PickupGame) => {
         blueTeamCaptain = players[Math.floor(Math.random() * players.length)].user;
     }
     pug.redTeamCaptain = redTeamCaptain;
+    pug.redTeam.push(redTeamCaptain);
     pug.blueTeamCaptain = blueTeamCaptain;
+    pug.blueTeam.push(blueTeamCaptain);
 };

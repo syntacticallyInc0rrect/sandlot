@@ -12,13 +12,14 @@ const handleVolunteerCommand = async (interaction: CommandInteraction) => {
         (!activePug) ? "You are not in an active Pickup Game to Volunteer as Captain for." :
             (activePug.pastReadyCheck()) ?
                 "Your Pickup Game is already passed the Ready Check phase." :
-                "You have volunteered as a Captain for your Pickup Game!";
+                "You have volunteered as a Captain and you are now Ready for your Pickup Game!";
     if (initiated && !!activePug && !activePug.pastReadyCheck()) {
         const maybePugPlayer: PugPlayer | undefined = activePug.players.find(p => p.user === interaction.user);
         if (!maybePugPlayer) throw Error(
             "Somehow the interaction user is not found in the Pickup Game players when they were expected to be."
         );
         maybePugPlayer.isVolunteer = true;
+        maybePugPlayer.isReady = true;
         if (!!activePug.players.find(p => !p.isReady)) {
             await activePug.message.edit({
                 embeds: [ReadyCheckEmbed(activePug.players, activePug.readyCheckCountdown)]

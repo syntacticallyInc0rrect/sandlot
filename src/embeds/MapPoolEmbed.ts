@@ -1,5 +1,5 @@
 import {MessageEmbed, MessageEmbedOptions} from "discord.js";
-import {authorIconUrl, availableMaps, previousPlayedMaps, suggestedMap, thumbnailUrl} from "../state/state";
+import {authorIconUrl, availableMaps, imageUrl, previousPlayedMaps, suggestedMap, thumbnailUrl} from "../state/state";
 
 export const MapPoolEmbed = (): MessageEmbed => {
     const props: MessageEmbedOptions = {
@@ -30,7 +30,7 @@ export const MapPoolEmbed = (): MessageEmbed => {
             }
         ],
         thumbnail: {url: thumbnailUrl},
-        image: {url: authorIconUrl}
+        image: {url: imageUrl}
     };
     return new MessageEmbed(props);
 };
