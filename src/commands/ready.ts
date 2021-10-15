@@ -10,11 +10,12 @@ import {
 } from "../state/state";
 import {PickupGame} from "../classes/PickupGame";
 import {ReadyCheckEmbed} from "../embeds/ReadyCheckEmbed";
-import {PickupGameEmbed} from "../embeds/PickupGameEmbed";
 import {moveUsersToVoiceChannel} from "../helpers/moveUsersToVoiceChannel";
 import {EndPugButtonRow} from "../rows/EndPugButtonRow";
 import {assignRandomTeams} from "../helpers/assignRandomTeams";
 import {assignRandomCaptains} from "../helpers/assignRandomCaptains";
+import {TeamPickEmbed} from "../embeds/TeamPickEmbed";
+import {PlayerSelectRow} from "../rows/PlayerSelectRow";
 
 const handleReadyCommand = async (interaction: CommandInteraction) => {
     const activePug: PickupGame | undefined = activePugs.find(ap => ap.players.find(p => p.user === interaction.user));
@@ -37,7 +38,7 @@ const handleReadyCommand = async (interaction: CommandInteraction) => {
             });
         } else {
             assignRandomCaptains(activePug);
-            assignRandomTeams(activePug);
+            // assignRandomTeams(activePug);
             await guild.channels.create("🎮 Insurgents", {
                 parent: activePug.category,
                 type: "GUILD_VOICE"
@@ -52,11 +53,13 @@ const handleReadyCommand = async (interaction: CommandInteraction) => {
                 activePug.blueTeamVoiceChannel = btvc;
                 await moveUsersToVoiceChannel(activePug.blueTeam, btvc);
             });
-            await activePug.textChannel.edit({name: `pug-${activePug.id}`})
+            await activePug.textChannel.edit({name: `pug-${activePug.id}`});
+            const isCaptain = (p: PugPlayer) => p.user !== activePug.redTeamCaptain && p.user !== activePug.blueTeamCaptain;
+            const players = activePug.players.filter(p => isCaptain(p)).map(p => p.user);
             await activePug.message.edit({
                 content: "/----- 𝙂𝙖𝙢𝙚 𝙏𝙞𝙢𝙚! -----/",
-                embeds: [PickupGameEmbed(activePug)],
-                components: [EndPugButtonRow()]
+                embeds: [TeamPickEmbed(activePug, activePug.redTeamCaptain)],
+                components: [PlayerSelectRow(players)]
             });
             await activePug.voiceChannel.delete();
         }

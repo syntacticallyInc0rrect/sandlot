@@ -4,10 +4,10 @@ import {authorIconUrl, thumbnailUrl} from "../state/state";
 import {usernameOrNickname} from "../helpers/usernameOrNickname";
 import {PickupGame} from "../classes/PickupGame";
 
-export const TeamPickEmbed = (pug: PickupGame, captain: (User | PartialUser)): MessageEmbed => {
+export const TeamPickEmbed = (pug: PickupGame, captain: User | PartialUser | undefined): MessageEmbed => {
     const props: MessageEmbedOptions = {
         title: `Pick Teams`,
-        description: `${usernameOrNickname(captain)}, it's your pick!`,
+        description: !!captain ? `${usernameOrNickname(captain)}, it's your pick!` : 'There are no Captain\'s',
         thumbnail: {url: thumbnailUrl},
         fields: [
             {
@@ -30,10 +30,12 @@ export const TeamPickEmbed = (pug: PickupGame, captain: (User | PartialUser)): M
             },
             {
                 name: "Available Players",
-                value: `${
-                    pug.players
-                    .filter(p => !pug.redTeam.find(rtp => rtp === p.user) && !pug.blueTeam.find(btp => btp === p.user))
-                    .map(player => memberNicknameMention(player.user.id))
+                value: pug.players
+                    .filter(p => !pug.redTeam.find(rtp => rtp === p.user) && !pug.blueTeam.find(btp => btp === p.user)).length < 1 ?
+                    'no more available players' :
+                    `${pug.players
+                        .filter(p => !pug.redTeam.find(rtp => rtp === p.user) && !pug.blueTeam.find(btp => btp === p.user))
+                        .map(player => memberNicknameMention(player.user.id))
                         .toString()
                         .replace(/\s*,\s*|\s+,/g, "\n")
                 }`,

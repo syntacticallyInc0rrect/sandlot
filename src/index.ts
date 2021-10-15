@@ -75,9 +75,8 @@ client.on('interactionCreate', async (interaction: Interaction) => {
             if (interaction.values[0] === 'end_pug')
                 await client.commands.get(CommandNameOption.end.valueOf()).execute(interaction);
             else await interaction.reply({content: 'Your command was cancelled.', ephemeral: true});
-        //TODO:
-        // } else if (interaction.customId === ButtonCustomIdOption.pick.valueOf()) {
-        //     await client.commands.get(CommandNameOption.pick.valueOf()).execute(interaction);
+        } else if (interaction.customId === ButtonCustomIdOption.pick.valueOf()) {
+            await client.commands.get(CommandNameOption.pick.valueOf()).execute(interaction);
         }
         return;
     } else {

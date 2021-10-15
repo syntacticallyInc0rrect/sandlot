@@ -22,6 +22,7 @@ export enum CommandNameOption {
     'join' = 'join',
     'leave' = 'leave',
     'not_ready' = 'not_ready',
+    'pick' = 'pick',
     'ping' = 'ping',
     'ready' = 'ready',
     'reset' = 'reset',
@@ -50,6 +51,7 @@ export enum ButtonCustomIdOption {
     'not_ready' = 'not_ready',
     'join' = `joinQueue`,
     'leave' = 'leaveQueue',
+    'pick' = 'pick',
     'ready' = 'ready',
     'volunteer' = 'volunteer'
 }
@@ -116,7 +118,7 @@ export const availableMaps: string[] = [
 ];
 
 // export let matchSize: number = 10;
-export let matchSize: number = 2;
+export let matchSize: number = 4;
 export const updateMatchSize = (newSize: number) => matchSize = newSize;
 
 export const updateAvailableMaps = (map: string, action: MultiplesAction) => {
