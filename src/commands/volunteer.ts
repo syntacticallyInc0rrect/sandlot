@@ -6,13 +6,16 @@ import {ReadyCheckEmbed} from "../embeds/ReadyCheckEmbed";
 
 const handleVolunteerCommand = async (interaction: CommandInteraction) => {
     const activePug: PickupGame | undefined = activePugs.find(ap => ap.players.find(p => p.user === interaction.user));
+    const activePugPlayer: PugPlayer | undefined = activePug?.players.find(p => p.user === interaction.user);
     const replyContent = (!initiated) ?
         "There is no initiated Pickup Game Bot for you to Volunteer as Captain for. " +
         "Run the /initiate command if you would like to initiate the Pickup Game Bot." :
         (!activePug) ? "You are not in an active Pickup Game to Volunteer as Captain for." :
             (activePug.pastReadyCheck()) ?
                 "Your Pickup Game is already passed the Ready Check phase." :
-                "You have volunteered as a Captain and you are now Ready for your Pickup Game!";
+                activePugPlayer && activePugPlayer.isReady ?
+                    "You have volunteered as a Captain!" :
+                    "You have volunteered as a Captain and you are now Ready for your Pickup Game!";
     if (initiated && !!activePug && !activePug.pastReadyCheck()) {
         const maybePugPlayer: PugPlayer | undefined = activePug.players.find(p => p.user === interaction.user);
         if (!maybePugPlayer) throw Error(

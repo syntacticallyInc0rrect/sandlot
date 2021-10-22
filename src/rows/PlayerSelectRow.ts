@@ -1,5 +1,5 @@
 import {MessageActionRow, MessageSelectMenu, MessageSelectOptionData, PartialUser, User} from "discord.js";
-import {CommandNameOption, guild} from "../state/state";
+import {CommandNameOption} from "../state/state";
 import {usernameOrNickname} from "../helpers/usernameOrNickname";
 
 export const PlayerSelectRow = (players: (User | PartialUser)[]): MessageActionRow => {
@@ -13,8 +13,8 @@ export const PlayerSelectRow = (players: (User | PartialUser)[]): MessageActionR
     return new MessageActionRow()
         .addComponents(
             new MessageSelectMenu()
-                .setCustomId(CommandNameOption.end.valueOf())
-                .setPlaceholder('Nothing selected')
+                .setCustomId(CommandNameOption.pick.valueOf())
+                .setPlaceholder('Pick your next team mate')
                 .addOptions(options)
         );
 };

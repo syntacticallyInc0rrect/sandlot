@@ -5,7 +5,7 @@ import {PartialUser, User} from "discord.js";
 export const assignRandomCaptains = (pug: PickupGame) => {
     let redTeamCaptain: (User | PartialUser);
     let blueTeamCaptain: (User | PartialUser);
-    const volunteers: PugPlayer[] = pug.players.filter(pp => pp.isVolunteer);
+    const volunteers: PugPlayer[] = [...pug.players.filter(pp => pp.isVolunteer)];
     if (volunteers.length > 1) {
         const randomVolunteer = volunteers[Math.floor(Math.random() * volunteers.length)];
         redTeamCaptain = randomVolunteer.user;
@@ -17,7 +17,7 @@ export const assignRandomCaptains = (pug: PickupGame) => {
         remainingPlayers.splice(remainingPlayers.indexOf(redTeamCaptain), 1);
         blueTeamCaptain = remainingPlayers[Math.floor(Math.random() * volunteers.length)];
     } else {
-        const players: PugPlayer[] = pug.players;
+        const players: PugPlayer[] = [...pug.players];
         const firstTeamCaptain = players[Math.floor(Math.random() * players.length)];
         players.splice(players.indexOf(firstTeamCaptain), 1);
         redTeamCaptain = firstTeamCaptain.user;
@@ -27,4 +27,5 @@ export const assignRandomCaptains = (pug: PickupGame) => {
     pug.redTeam.push(redTeamCaptain);
     pug.blueTeamCaptain = blueTeamCaptain;
     pug.blueTeam.push(blueTeamCaptain);
+    pug.teamPick = pug.redTeamCaptain;
 };

@@ -32,6 +32,7 @@ export class PickupGame {
     private _map: string | undefined;
     private _redTeamCaptain: (User | PartialUser) | undefined;
     private _blueTeamCaptain: (User | PartialUser) | undefined;
+    private _teamPick: (User | PartialUser) | undefined;
 
     constructor(
         id: number,
@@ -142,6 +143,20 @@ export class PickupGame {
 
     set blueTeamCaptain(value: User | PartialUser | undefined) {
         this._blueTeamCaptain = value;
+    }
+
+    get teamPick(): (User | PartialUser | undefined) {
+        return this._teamPick;
+    }
+
+    set teamPick(value: User | PartialUser | undefined) {
+        this._teamPick = value;
+    }
+
+    toggleTeamPick() {
+        this._teamPick = this.teamPick && this.teamPick === this.redTeamCaptain ?
+            this.blueTeamCaptain :
+            this.redTeamCaptain;
     }
 
     pastReadyCheck(): boolean {
