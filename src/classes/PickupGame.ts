@@ -171,7 +171,7 @@ export class PickupGame {
             }
             if (this._readyCheckCountdown < 1 && !this.pastReadyCheck()) {
                 let readyPlayers = this._players.filter(p => p.isReady);
-                if (queuedUsers.length + (matchSize - readyPlayers.length) < matchSize) {
+                if ((queuedUsers.length + (matchSize - readyPlayers.length)) < matchSize) {
                     readyPlayers.forEach(rp => queuedUsers.push(rp.user));
                     const usernamesOrNicknames: string[] = this._players
                         .filter(p => !p.isReady)
