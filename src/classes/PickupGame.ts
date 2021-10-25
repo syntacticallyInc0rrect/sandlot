@@ -154,7 +154,7 @@ export class PickupGame {
     }
 
     toggleTeamPick() {
-        this._teamPick = this.teamPick && this.teamPick === this.redTeamCaptain ?
+        this._teamPick = !!this.teamPick && this.teamPick === this.redTeamCaptain ?
             this.blueTeamCaptain :
             this.redTeamCaptain;
     }

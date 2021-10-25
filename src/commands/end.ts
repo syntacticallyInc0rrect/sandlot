@@ -8,7 +8,7 @@ import {
     MultiplesAction,
     pugAuditTextChannel,
     suggestedMap,
-    updatePreviousPlayedMaps, updateSuggestedMap,
+    updatePreviousPlayedMaps,
 } from "../state/state";
 import {CommandInteraction} from "discord.js";
 import {PickupGame} from "../classes/PickupGame";
