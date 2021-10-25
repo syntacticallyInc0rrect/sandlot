@@ -48,14 +48,12 @@ const handlePickCommand = async (interaction: CommandInteraction) => {
         currentTeamPicking.push(pickedPlayer.user);
         activePug.toggleTeamPick();
         if ((activePug.redTeam.length + activePug.blueTeam.length) === (matchSize - 1)) {
-            const lastPlayer: (PugPlayer | undefined) =
-                activePug.players
-                    .find(p => !!activePug.redTeam
-                            .find(rtp => rtp !== p.user) &&
-                        !!activePug.blueTeam
-                            .find(btp => btp !== p.user)
-                    );
-            !!lastPlayer && currentTeamPicking.push(lastPlayer.user);
+            const lastPlayer: (User | PartialUser | undefined) = activePug.players
+                .map(p => p.user)
+                .find(p => !activePug.redTeam.find(rtp => rtp === p) &&
+                    !activePug.blueTeam.find(btp => btp === p)
+                );
+            !!lastPlayer && activePug.blueTeam.push(lastPlayer);
             await activePug.message.edit({
                 content: "/----- 𝙂𝙖𝙢𝙚 𝙏𝙞𝙢𝙚! -----/",
                 embeds: [PickupGameEmbed(activePug)],
