@@ -15,7 +15,10 @@ const handlePickCommand = async (interaction: CommandInteraction) => {
         });
         return;
     }
-    const activePug: PickupGame | undefined = activePugs.find(ap => ap.players.find(p => p.user === interaction.user));
+    const activePug: (PickupGame | undefined) = activePugs.find(ap => ap.players.find(p => p.user === interaction.user));
+    const pickedPlayer: (User | PartialUser | undefined) =
+        activePug && activePug.players.find(p => p.user.id === interaction.values[0].substring(5))
+            && activePug.players.find(p => p.user.id === interaction.values[0].substring(5))!.user;
     const replyContent = (!initiated) ?
         "There is no initiated Pickup Game Bot for you to pick teams with. " +
         "Run the /initiate command if you would like to initiate the Pickup Game Bot." :
@@ -24,7 +27,7 @@ const handlePickCommand = async (interaction: CommandInteraction) => {
                 "Your are not authorized to pick teams. You must be a captain to be pick team mates." :
                 (interaction.user !== activePug.teamPick) ?
                     "It is not your pick. Wait your turn." :
-                    `You picked ${interaction.values[0]}!`;
+                    `You picked ${!!pickedPlayer ? usernameOrNickname(pickedPlayer) : 'someone'}!`;
 
     if (initiated && !!activePug && interaction.user === activePug.teamPick) {
         const currentTeamPicking: (User | PartialUser)[] = activePug.redTeam.find(p => p === activePug.teamPick) ?
