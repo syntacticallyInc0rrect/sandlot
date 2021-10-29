@@ -54,6 +54,7 @@ const handlePickCommand = async (interaction: CommandInteraction) => {
                     !activePug.blueTeam.find(btp => btp === p)
                 );
             !!lastPlayer && activePug.blueTeam.push(lastPlayer);
+            await activePug.textChannel.edit({name: `pug-${activePug.id}`});
             await activePug.message.edit({
                 content: "/----- 𝙂𝙖𝙢𝙚 𝙏𝙞𝙢𝙚! -----/",
                 embeds: [PickupGameEmbed(activePug)],

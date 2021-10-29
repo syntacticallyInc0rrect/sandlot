@@ -30,6 +30,7 @@ const handleReadyCommand = async (interaction: CommandInteraction) => {
             assignRandomCaptains(activePug);
             const isNotCaptain = (p: PugPlayer) => p.user !== activePug.redTeamCaptain && p.user !== activePug.blueTeamCaptain;
             const players = activePug.players.filter(p => isNotCaptain(p)).map(p => p.user);
+            await activePug.textChannel.edit({name: "pick-teams"});
             await activePug.message.edit({
                 content: "/----- 𝙋𝙞𝙘𝙠 𝙏𝙚𝙖𝙢𝙨! -----/",
                 embeds: [TeamPickEmbed(activePug, activePug.redTeamCaptain)],
