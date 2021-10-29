@@ -6,8 +6,6 @@ import {usernameOrNickname} from "../helpers/usernameOrNickname";
 import {TeamPickEmbed} from "../embeds/TeamPickEmbed";
 import {PlayerSelectRow} from "../rows/PlayerSelectRow";
 import {moveUsersToVoiceChannel} from "../helpers/moveUsersToVoiceChannel";
-import {PickupGameEmbed} from "../embeds/PickupGameEmbed";
-import {EndPugButtonRow} from "../rows/EndPugButtonRow";
 
 const handlePickCommand = async (interaction: CommandInteraction) => {
     if (!interaction.isSelectMenu()) {
