@@ -26,7 +26,8 @@ export enum CommandNameOption {
     'ready' = 'ready',
     'reset' = 'reset',
     'terminate' = 'terminate',
-    'volunteer' = 'volunteer'
+    'volunteer' = 'volunteer',
+    'vote' = 'vote'
 }
 
 export enum CommandDescOption {
@@ -41,7 +42,8 @@ export enum CommandDescOption {
     'ready' = 'Changes user\'s Ready Check status to Ready',
     'reset' = 'Removes all queued players from the PUG Queue',
     'terminate' = 'Terminates the PUG Bot',
-    'volunteer' = 'Volunteer\'s user for PUG Captain'
+    'volunteer' = 'Volunteer\'s user for PUG Captain',
+    'vote' = 'Cast vote for which map to play'
 }
 
 export enum ButtonCustomIdOption {
@@ -52,7 +54,8 @@ export enum ButtonCustomIdOption {
     'leave' = 'leaveQueue',
     'pick' = 'pick',
     'ready' = 'ready',
-    'volunteer' = 'volunteer'
+    'volunteer' = 'volunteer',
+    'vote' = 'vote'
 }
 
 export enum MultiplesAction {
@@ -74,6 +77,11 @@ export type PugPlayer = {
     isReady: boolean,
     isVolunteer: boolean,
     hasVoted: boolean
+}
+
+export type MapVote = {
+    user: (User | PartialUser),
+    map: string
 }
 
 export let initiated: boolean;

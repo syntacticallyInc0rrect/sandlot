@@ -10,7 +10,7 @@ export const PickupGameEmbed = (pug: PickupGame): MessageEmbed => {
         fields: [
             {
                 name: "Map",
-                value: suggestedMap,
+                value: pug.map,
                 inline: false
             },
             {

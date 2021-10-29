@@ -2,18 +2,24 @@ import {CategoryChannel, Message, PartialUser, TextChannel, User, VoiceChannel} 
 import {
     activePugs,
     cancelActivePug,
-    guild, mapVoteTime,
+    guild,
+    mapVoteTime,
     matchSize,
     pugQueueBotMessage,
     pugQueueBotTextChannel,
     queuedUsers,
     PugPlayer,
-    readyCheckTime
+    readyCheckTime,
+    MapVote,
 } from "../state/state";
 import {sendFailedReadyCheckDirectMessages} from "../direct_messages/sendFailedReadyCheckDirectMessages";
 import {MapPoolEmbed} from "../embeds/MapPoolEmbed";
 import {QueueEmbed} from "../embeds/QueueEmbed";
 import {ReadyCheckEmbed} from "../embeds/ReadyCheckEmbed";
+import {EndPugButtonRow} from "../rows/EndPugButtonRow";
+import {PickupGameEmbed} from "../embeds/PickupGameEmbed";
+import {MapVoteEmbed} from "../embeds/MapVoteEmbed";
+import {MapVoteSelectRow} from "../rows/MapVoteSelectRow";
 
 export class PickupGame {
     private readonly _id: number;
@@ -29,7 +35,8 @@ export class PickupGame {
     private _blueTeamVoiceChannel: VoiceChannel | undefined;
     private _readyCheckCountdown: number;
     private _mapVoteCountdown: number;
-    private _map: string | undefined;
+    private _maps: MapVote[] = [];
+    private _map: string = 'No Map Picked';
     private _redTeamCaptain: (User | PartialUser) | undefined;
     private _blueTeamCaptain: (User | PartialUser) | undefined;
     private _teamPick: (User | PartialUser) | undefined;
@@ -101,11 +108,19 @@ export class PickupGame {
         return this._mapVoteCountdown;
     }
 
-    get map(): string | undefined {
+    get maps(): MapVote[] {
+        return this._maps;
+    }
+
+    set maps(value: MapVote[]) {
+        this._maps = value;
+    }
+
+    get map(): string {
         return this._map;
     }
 
-    set map(value: string | undefined) {
+    set map(value: string) {
         this._map = value;
     }
 
@@ -161,6 +176,26 @@ export class PickupGame {
 
     pastReadyCheck(): boolean {
         return !this._players.find(p => !p.isReady);
+    }
+
+    getHighestVotedMap(): string {
+        type VotedMap = {
+            map: string;
+            count: number;
+        }
+        const votedMaps: VotedMap[] = [];
+        this._maps.forEach(m => {
+            const existingVotedMap: VotedMap | undefined = votedMaps.find(vm => vm.map === m.map)
+            if (!!existingVotedMap) {
+                votedMaps[votedMaps.indexOf(existingVotedMap)].count++;
+            } else {
+                votedMaps.push({map: m.map, count: 1});
+            }
+        });
+        const highestVoteCount: number = votedMaps
+            .sort((a, b) => b.count - a.count)[0].count;
+        const highestVotedMaps: VotedMap[] = votedMaps.filter(vm => vm.count === highestVoteCount);
+        return highestVotedMaps[Math.floor(Math.random() * highestVotedMaps.length)].map;
     }
 
     readyCheckTimer() {
@@ -220,11 +255,20 @@ export class PickupGame {
     mapVoteTimer() {
         setTimeout(async () => {
             if (this._mapVoteCountdown < 1) {
+                this._map = this.getHighestVotedMap();
                 this._mapVoteCountdown = mapVoteTime;
+                await this._textChannel.edit({name: `pug-${this._id}`});
+                await this._message.edit({
+                    content: "/----- 𝙂𝙖𝙢𝙚 𝙏𝙞𝙢𝙚! -----/",
+                    embeds: [PickupGameEmbed(this)],
+                    components: [EndPugButtonRow()]
+                });
                 return;
             } else {
                 await this.message.edit({
-                    // embeds: [MapVoteEmbed(this.players, this._mapVoteCountdown)]
+                    content: "/----- 𝙈𝙖𝙥 𝙑𝙤𝙩𝙚! -----/",
+                    embeds: [MapVoteEmbed(this._mapVoteCountdown)],
+                    components: [MapVoteSelectRow()]
                 });
                 this._mapVoteCountdown -= (this._countdownIteration / 1000);
                 this.mapVoteTimer();
