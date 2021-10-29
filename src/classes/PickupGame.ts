@@ -178,26 +178,6 @@ export class PickupGame {
         return !this._players.find(p => !p.isReady);
     }
 
-    getHighestVotedMap(): string {
-        type VotedMap = {
-            map: string;
-            count: number;
-        }
-        const votedMaps: VotedMap[] = [];
-        this._maps.forEach(m => {
-            const existingVotedMap: VotedMap | undefined = votedMaps.find(vm => vm.map === m.map)
-            if (!!existingVotedMap) {
-                votedMaps[votedMaps.indexOf(existingVotedMap)].count++;
-            } else {
-                votedMaps.push({map: m.map, count: 1});
-            }
-        });
-        const highestVoteCount: number = votedMaps
-            .sort((a, b) => b.count - a.count)[0].count;
-        const highestVotedMaps: VotedMap[] = votedMaps.filter(vm => vm.count === highestVoteCount);
-        return highestVotedMaps[Math.floor(Math.random() * highestVotedMaps.length)].map;
-    }
-
     readyCheckTimer() {
         setTimeout(async () => {
             if (!activePugs.find(ap => ap === this) || this.pastReadyCheck()) {
@@ -255,17 +235,34 @@ export class PickupGame {
     mapVoteTimer() {
         setTimeout(async () => {
             if (this._mapVoteCountdown < 1) {
-                this._map = this.getHighestVotedMap();
-                this._mapVoteCountdown = mapVoteTime;
-                await this._textChannel.edit({name: `pug-${this._id}`});
+                type VotedMap = {
+                    map: string;
+                    count: number;
+                }
+                const votedMaps: VotedMap[] = [];
+                this._maps.forEach(m => {
+                    const existingVotedMap: VotedMap | undefined = votedMaps.find(vm => vm.map === m.map);
+                    if (!!existingVotedMap) {
+                        votedMaps[votedMaps.indexOf(existingVotedMap)].count++;
+                    } else {
+                        votedMaps.push({map: m.map, count: 1});
+                    }
+                });
+                const highestVoteCount: number =
+                    votedMaps.length > 0 ?
+                        votedMaps.sort((a, b) => b.count - a.count)[0].count :
+                        0;
+                const highestVotedMaps: VotedMap[] = votedMaps.filter(vm => vm.count === highestVoteCount);
+                this._map = highestVotedMaps[Math.floor(Math.random() * highestVotedMaps.length)].map;
                 await this._message.edit({
                     content: "/----- 𝙂𝙖𝙢𝙚 𝙏𝙞𝙢𝙚! -----/",
                     embeds: [PickupGameEmbed(this)],
                     components: [EndPugButtonRow()]
                 });
+                this._mapVoteCountdown = mapVoteTime;
                 return;
             } else {
-                await this.message.edit({
+                await this._message.edit({
                     content: "/----- 𝙈𝙖𝙥 𝙑𝙤𝙩𝙚! -----/",
                     embeds: [MapVoteEmbed(this._mapVoteCountdown)],
                     components: [MapVoteSelectRow()]

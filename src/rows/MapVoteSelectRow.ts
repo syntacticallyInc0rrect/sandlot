@@ -1,4 +1,4 @@
-import {MessageActionRow, MessageSelectMenu, MessageSelectOptionData, PartialUser, User} from "discord.js";
+import {MessageActionRow, MessageSelectMenu, MessageSelectOptionData} from "discord.js";
 import {availableMaps, CommandNameOption} from "../state/state";
 
 export const MapVoteSelectRow = (): MessageActionRow => {

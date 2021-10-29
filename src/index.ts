@@ -71,12 +71,21 @@ client.on('interactionCreate', async (interaction: Interaction) => {
                 return;
         }
     } else if (interaction.isSelectMenu()) {
-        if (interaction.customId === ButtonCustomIdOption.end.valueOf()) {
-            if (interaction.values[0] === 'end_pug')
-                await client.commands.get(CommandNameOption.end.valueOf()).execute(interaction);
-            else await interaction.reply({content: 'Your command was cancelled.', ephemeral: true});
-        } else if (interaction.customId === ButtonCustomIdOption.pick.valueOf()) {
-            await client.commands.get(CommandNameOption.pick.valueOf()).execute(interaction);
+        switch (interaction.customId) {
+            case ButtonCustomIdOption.end.valueOf():
+                if (interaction.values[0] === 'end_pug')
+                    await client.commands.get(CommandNameOption.end.valueOf()).execute(interaction);
+                else
+                    await interaction.reply({content: 'Your command was cancelled.', ephemeral: true});
+                break;
+            case ButtonCustomIdOption.pick.valueOf():
+                await client.commands.get(CommandNameOption.pick.valueOf()).execute(interaction);
+                break;
+            case ButtonCustomIdOption.vote.valueOf():
+                await client.commands.get(CommandNameOption.vote.valueOf()).execute(interaction);
+                break;
+            default:
+                break;
         }
         return;
     } else {

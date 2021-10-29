@@ -6,6 +6,8 @@ import {usernameOrNickname} from "../helpers/usernameOrNickname";
 import {TeamPickEmbed} from "../embeds/TeamPickEmbed";
 import {PlayerSelectRow} from "../rows/PlayerSelectRow";
 import {moveUsersToVoiceChannel} from "../helpers/moveUsersToVoiceChannel";
+import {MapVoteEmbed} from "../embeds/MapVoteEmbed";
+import {MapVoteSelectRow} from "../rows/MapVoteSelectRow";
 
 const handlePickCommand = async (interaction: CommandInteraction) => {
     if (!interaction.isSelectMenu()) {
@@ -46,14 +48,18 @@ const handlePickCommand = async (interaction: CommandInteraction) => {
         currentTeamPicking.push(pickedPlayer.user);
         activePug.toggleTeamPick();
         if ((activePug.redTeam.length + activePug.blueTeam.length) === (matchSize - 1)) {
+            await activePug.message.edit({
+                content: "/----- 𝙈𝙖𝙥 𝙑𝙤𝙩𝙚! -----/",
+                embeds: [MapVoteEmbed(activePug.mapVoteCountdown)],
+                components: [MapVoteSelectRow()]
+            });
             const lastPlayer: (User | PartialUser | undefined) = activePug.players
                 .map(p => p.user)
                 .find(p => !activePug.redTeam.find(rtp => rtp === p) &&
                     !activePug.blueTeam.find(btp => btp === p)
                 );
             !!lastPlayer && activePug.blueTeam.push(lastPlayer);
-            await activePug.textChannel.edit({name: "map-vote"});
-            activePug.mapVoteTimer();
+            await activePug.textChannel.edit({name: `pug-${activePug.id}`});
             await guild.channels.create("🎮 Insurgents", {
                 parent: activePug.category,
                 type: "GUILD_VOICE"
@@ -69,6 +75,7 @@ const handlePickCommand = async (interaction: CommandInteraction) => {
                 await moveUsersToVoiceChannel(activePug.blueTeam, btvc);
             });
             await activePug.voiceChannel.delete();
+            activePug.mapVoteTimer();
         } else {
             const players = activePug.players
                 .map(pugPlayer => pugPlayer.user)

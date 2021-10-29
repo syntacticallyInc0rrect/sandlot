@@ -37,7 +37,7 @@ const handleEndCommand = async (interaction: CommandInteraction) => {
                 fetchReply: false
             });
         } else {
-            updatePreviousPlayedMaps(suggestedMap, MultiplesAction.ADD);
+            updatePreviousPlayedMaps(activePug.map, MultiplesAction.ADD);
             await cancelActivePug(activePug).then(() => pugAuditTextChannel.send({
                 content: codeBlock(`Pickup Game #${activePug.id} was ended by ${interaction.user.username}`)
             }));
