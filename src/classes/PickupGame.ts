@@ -104,6 +104,10 @@ export class PickupGame {
         return this._readyCheckCountdown;
     }
 
+    set readyCheckCountdown(value: number) {
+        this._readyCheckCountdown = value;
+    }
+
     get mapVoteCountdown(): number {
         return this._mapVoteCountdown;
     }

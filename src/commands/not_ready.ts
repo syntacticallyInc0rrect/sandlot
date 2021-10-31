@@ -9,7 +9,8 @@ import {
     pugAuditTextChannel,
     pugQueueBotMessage,
     pugQueueBotTextChannel,
-    queuedUsers
+    queuedUsers,
+    readyCheckTime
 } from "../state/state";
 import {PickupGame} from "../classes/PickupGame";
 import {ReadyCheckEmbed} from "../embeds/ReadyCheckEmbed";
@@ -29,13 +30,17 @@ const handleNotReadyCommand = async (interaction: CommandInteraction) => {
                 "You have cancelled the Ready Check, left the Pickup Game, and reverted it back to the Queue state."
     if (initiated && !!activePug && !activePug.redTeamVoiceChannel) {
         const playerThatCancelled = activePug.players.find(p => p.user === interaction.user);
-        if (!playerThatCancelled)
-            throw Error("Someone the Player that Cancelled in the Ready Check does not exist in the Ready Check.");
+        if (!playerThatCancelled) {
+            console.log("Somehow the Player that Cancelled in the Ready Check does not exist in the Ready Check.");
+            return;
+        }
         activePug.players.splice(activePug.players.indexOf(playerThatCancelled), 1);
         if (queuedUsers.length > 0) {
-            activePug.players.push({user: queuedUsers[0], isReady: false, isVolunteer: false, hasVoted: false});
-            await sendReadyCheckDirectMessages([queuedUsers[0]], activePug.textChannel);
-            queuedUsers.splice(0, 1);
+            const firstQueuedUser = queuedUsers[0];
+            queuedUsers.splice(queuedUsers.indexOf(firstQueuedUser), 1);
+            activePug.players.push({user: firstQueuedUser, isReady: false, isVolunteer: false, hasVoted: false});
+            activePug.readyCheckCountdown = readyCheckTime;
+            await sendReadyCheckDirectMessages([firstQueuedUser], activePug.textChannel);
             await activePug.message.edit({
                 embeds: [ReadyCheckEmbed(activePug.players, activePug.readyCheckCountdown)]
             });
@@ -43,23 +48,24 @@ const handleNotReadyCommand = async (interaction: CommandInteraction) => {
                 embeds: [MapPoolEmbed(), QueueEmbed()]
             });
         } else {
-            activePug.players.forEach(p => queuedUsers.push(p.user));
+            queuedUsers.push(...activePug.players.map(p => p.user));
+            // activePug.players.forEach(p => queuedUsers.push(p.user));
             const maybeGuild: Guild | null = interaction.guild;
             const maybeGuildMember: (GuildMember | null | undefined) = maybeGuild &&
                 maybeGuild.members.cache.find(m => m.user === interaction.user);
             const maybeNickname: string | null | undefined = maybeGuild && maybeGuildMember &&
                 maybeGuildMember.nickname;
-            await sendCancelledReadyCheckDirectMessages(
-                activePug.players.map(p => p.user),
-                pugQueueBotTextChannel,
-                maybeNickname ? maybeNickname : interaction.user.username
-            );
             await cancelActivePug(activePug);
             await pugQueueBotMessage.edit({
                 embeds: [MapPoolEmbed(), QueueEmbed()]
             }).then(() => pugAuditTextChannel.send({
                 content: codeBlock(`Ready Check cancelled by ${interaction.user.username}`)
             }));
+            await sendCancelledReadyCheckDirectMessages(
+                activePug.players.map(p => p.user),
+                pugQueueBotTextChannel,
+                maybeNickname ? maybeNickname : interaction.user.username
+            );
         }
     }
     await interaction.reply({

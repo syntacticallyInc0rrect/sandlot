@@ -201,7 +201,7 @@ export const updateActivePugs = (pug: PickupGame, action: MultiplesAction) => {
     }
 };
 
-export const cancelActivePug = async (activePug: PickupGame) => {
+export const cancelActivePug = async (activePug: PickupGame): Promise<any> => {
     await moveUsersToVoiceChannel(activePug.players.map(p => p.user), pugQueueVoiceChannel).catch();
     const channelExists = (channel: Channel) => !!guild.channels.cache.get(channel.id);
     if (channelExists(activePug.category)) await activePug.category.delete().catch();
@@ -212,6 +212,7 @@ export const cancelActivePug = async (activePug: PickupGame) => {
     if (activePug.blueTeamVoiceChannel && channelExists(activePug.blueTeamVoiceChannel))
         await activePug.blueTeamVoiceChannel.delete().catch();
     activePugs.splice(activePugs.indexOf(activePug), 1);
+    return Promise.resolve();
 };
 
 export const cancelAllActivePugs = () => activePugs.splice(0, activePugs.length);
